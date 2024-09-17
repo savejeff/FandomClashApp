@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'models.dart'; // Import your models
 import 'target_picker.dart'; // Import the target picker dialog
+import 'mechanics.dart'; // Import the mechanics
 
 
 void main() {
@@ -240,17 +241,16 @@ class ActionInterface extends StatelessWidget {
               // Show the target picker dialog
               Character? target = await showTargetPickerDialog(
                 context,
-                // You need to pass the list of all characters
-                // Assuming you have access to the characters list
-                characters, // Pass the list from the parent widget
-                character,  // The attacker is the selected character
+                characters, // Pass the list of characters
+                character,  // The attacker
               );
 
               if (target != null) {
                 // Proceed with the attack logic
-                // For now, show a SnackBar as a placeholder
+                String result = attack(character, target);
+                onUpdate(); // Update the UI
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('${character.name} attacks ${target.name}!')),
+                  SnackBar(content: Text(result)),
                 );
               } else {
                 // Attack was canceled
