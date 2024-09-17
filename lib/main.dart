@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'dart:math';
 import 'models.dart'; // Import your models
+import 'target_picker.dart'; // Import the target picker dialog
+
 
 void main() {
   runApp(const MyApp());
@@ -187,6 +188,7 @@ class _MyHomePageState extends State<MyHomePage> {
             child: selectedCharacter != null
                 ? ActionInterface(
               character: selectedCharacter!,
+              characters: characters, // Pass the characters list
               onUpdate: () {
                 setState(() {
                   // Update UI when character changes
@@ -211,11 +213,13 @@ class _MyHomePageState extends State<MyHomePage> {
 // ActionInterface Widget
 class ActionInterface extends StatelessWidget {
   final Character character;
+  final List<Character> characters; // Add this line
   final VoidCallback onUpdate;
 
   const ActionInterface({
     Key? key,
     required this.character,
+    required this.characters, // Add this line
     required this.onUpdate,
   }) : super(key: key);
 
@@ -232,14 +236,32 @@ class ActionInterface extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           ElevatedButton(
-            onPressed: () {
-              // Mockup: Attack action
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('${character.name} attacks!')),
+            onPressed: () async {
+              // Show the target picker dialog
+              Character? target = await showTargetPickerDialog(
+                context,
+                // You need to pass the list of all characters
+                // Assuming you have access to the characters list
+                characters, // Pass the list from the parent widget
+                character,  // The attacker is the selected character
               );
+
+              if (target != null) {
+                // Proceed with the attack logic
+                // For now, show a SnackBar as a placeholder
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('${character.name} attacks ${target.name}!')),
+                );
+              } else {
+                // Attack was canceled
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Attack canceled')),
+                );
+              }
             },
             child: const Text('Attack'),
           ),
+
           const SizedBox(height: 8),
           ElevatedButton(
             onPressed: () {

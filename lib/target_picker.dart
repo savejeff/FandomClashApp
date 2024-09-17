@@ -1,0 +1,39 @@
+// target_picker.dart
+import 'package:flutter/material.dart';
+import 'models.dart'; // Import your models
+
+// Function to show the target picker dialog
+Future<Character?> showTargetPickerDialog(
+    BuildContext context, List<Character> characters, Character attacker) async {
+  return showDialog<Character>(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Select Target'),
+        content: SingleChildScrollView(
+          child: ListBody(
+            children: characters
+                .where((character) => character != attacker && character.isAlive)
+                .map((Character character) {
+              return ListTile(
+                title: Text(character.name),
+                subtitle: Text('HP: ${character.HP}/${character.maxHP}'),
+                onTap: () {
+                  Navigator.of(context).pop(character);
+                },
+              );
+            }).toList(),
+          ),
+        ),
+        actions: [
+          TextButton(
+            child: Text('Cancel'),
+            onPressed: () {
+              Navigator.of(context).pop(null);
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
