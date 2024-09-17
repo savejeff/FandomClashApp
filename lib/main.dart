@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'dart:math';
+import 'models.dart'; // Import your models
 
 void main() {
   runApp(const MyApp());
@@ -7,31 +9,16 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
+  // Root of your application
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Fandom Clash: Homefront Edition',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightBlue),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'Fandom Clash: Homefront Edition'),
     );
   }
 }
@@ -39,87 +26,145 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
   final String title;
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+// CharacterStatsWidget definition
+class CharacterStatsWidget extends StatelessWidget {
+  final Character character;
 
-  void _incrementCounter() {
+  const CharacterStatsWidget({Key? key, required this.character})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      // Use a Card widget for better UI
+      margin: const EdgeInsets.all(8.0),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            Text(
+              'Name: ${character.name}',
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            ),
+            Text('Player: ${character.player}'),
+            Text('HP: ${character.HP}/${character.maxHP}'),
+            Text('AP: ${character.AP}'),
+            Text('P: ${character.P}'),
+            Text('A: ${character.A}'),
+            Text('W: ${character.W}'),
+            Text('Role: ${character.role ?? 'N/A'}'),
+            Text('Fandom: ${character.fandomTrait ?? 'N/A'}'),
+            // Add more stats as needed
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  // Define three characters
+  late Character character1;
+  late Character character2;
+  late Character character3;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Initialize the characters
+    character1 = Character(
+      name: 'Warrior',
+      player: 'Player 1',
+      P: 7,
+      A: 4,
+      W: 4,
+      maxHP: 17, // 10 + P (7) = 17
+      HP: 17,
+      AP: 9, // 5 + W (4) = 9
+      MR: 3, // 1 + (A ÷ 2) = 1 + (4 ÷ 2) = 3
+      abilities: [],
+      items: [],
+      size: 'Large',
+      fandomTrait: 'Superhero',
+      role: 'Warrior',
+    );
+
+    character2 = Character(
+      name: 'Ranger',
+      player: 'Player 1',
+      P: 4,
+      A: 5,
+      W: 6,
+      maxHP: 14, // 10 + P (4) = 14
+      HP: 14,
+      AP: 11, // 5 + W (6) = 11
+      MR: 3, // 1 + (5 ÷ 2) = 3
+      abilities: [],
+      items: [],
+      size: 'Medium',
+      fandomTrait: 'Anime',
+      role: 'Ranger',
+    );
+
+    character3 = Character(
+      name: 'Scout',
+      player: 'Player 1',
+      P: 3,
+      A: 7,
+      W: 5,
+      maxHP: 13, // 10 + P (3) = 13
+      HP: 13,
+      AP: 10, // 5 + W (5) = 10
+      MR: 4, // 1 + (7 ÷ 2) = 4
+      abilities: [],
+      items: [],
+      size: 'Small',
+      fandomTrait: 'Fantasy Creature',
+      role: 'Scout',
+    );
+  }
+
+  // FloatingActionButton callback (to be implemented later)
+  void _onButtonAddCharacter() {
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+      // Logic to create new units will go here
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
       body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
+        child: SingleChildScrollView(
+          // Enable horizontal scrolling if needed
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            // Align widgets horizontally
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              CharacterStatsWidget(character: character1),
+              CharacterStatsWidget(character: character2),
+              CharacterStatsWidget(character: character3),
+            ],
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
+        onPressed: _onButtonAddCharacter,
+        tooltip: 'Add Character',
         child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      ), // FloatingActionButton kept for later use
     );
   }
 }
