@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'models.dart'; // Import your models
 import 'target_picker.dart'; // Import the target picker dialog
 import 'mechanics.dart'; // Import the mechanics
+import 'game_manager.dart';       // Import GameManager
+import 'character_manager.dart';  // Import CharacterManager
+
 
 
 void main() {
@@ -65,13 +68,15 @@ class CharacterStatsWidget extends StatelessWidget {
                 const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
               Text('Player: ${character.player}'),
-              Text('HP: ${character.HP}/${character.maxHP}'),
-              Text('AP: ${character.AP}'),
-              Text('P: ${character.P}'),
-              Text('A: ${character.A}'),
-              Text('W: ${character.W}'),
               Text('Role: ${character.role ?? 'N/A'}'),
               Text('Fandom: ${character.fandomTrait ?? 'N/A'}'),
+              Text(''),
+              Text('P: ${character.P} A: ${character.A} W: ${character.W}',
+              style:
+                const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),),
+              Text('HP: ${character.HP}/${character.maxHP}'),
+              Text('AP: ${character.AP}'),
+              Text(''),
               // Add more stats as needed
             ],
           ),
@@ -82,8 +87,8 @@ class CharacterStatsWidget extends StatelessWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  // Define a list of characters
-  late List<Character> characters;
+  // Remove the characters list from the state
+  // late List<Character> characters;
 
   // Currently selected character
   Character? selectedCharacter;
@@ -92,57 +97,63 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
 
-    // Initialize the characters
-    characters = [
+    // Initialize the characters via CharacterManager
+    GameManager().characterManager.addCharacter(
       Character(
         name: 'Warrior',
         player: 'Player 1',
         P: 7,
         A: 4,
         W: 4,
-        maxHP: 17, // 10 + P (7) = 17
+        maxHP: 17,
         HP: 17,
-        AP: 9, // 5 + W (4) = 9
-        MR: 3, // 1 + (A ÷ 2) = 1 + (4 ÷ 2) = 3
+        AP: 9,
+        MR: 3,
         abilities: [],
         items: [],
         size: 'Large',
         fandomTrait: 'Superhero',
         role: 'Warrior',
       ),
+    );
+
+    GameManager().characterManager.addCharacter(
       Character(
         name: 'Ranger',
         player: 'Player 1',
         P: 4,
         A: 5,
         W: 6,
-        maxHP: 14, // 10 + P (4) = 14
+        maxHP: 14,
         HP: 14,
-        AP: 11, // 5 + W (6) = 11
-        MR: 3, // 1 + (5 ÷ 2) = 3
+        AP: 11,
+        MR: 3,
         abilities: [],
         items: [],
         size: 'Medium',
         fandomTrait: 'Anime',
         role: 'Ranger',
       ),
+    );
+
+    GameManager().characterManager.addCharacter(
       Character(
         name: 'Scout',
         player: 'Player 1',
         P: 3,
         A: 7,
         W: 5,
-        maxHP: 13, // 10 + P (3) = 13
+        maxHP: 13,
         HP: 13,
-        AP: 10, // 5 + W (5) = 10
-        MR: 4, // 1 + (7 ÷ 2) = 4
+        AP: 10,
+        MR: 4,
         abilities: [],
         items: [],
         size: 'Small',
         fandomTrait: 'Fantasy Creature',
         role: 'Scout',
       ),
-    ];
+    );
   }
 
   // FloatingActionButton callback (to be implemented later)
@@ -164,32 +175,41 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        backgroundColor: Theme
+            .of(context)
+            .colorScheme
+            .inversePrimary,
       ),
       body: Row(
         children: [
           // Left Side: List of characters
           Expanded(
             flex: 1,
-            child: ListView.builder(
-              itemCount: characters.length,
-              itemBuilder: (context, index) {
-                Character character = characters[index];
-                return CharacterStatsWidget(
-                  character: character,
-                  isSelected: selectedCharacter == character,
-                  onTap: () => _selectCharacter(character),
+            child: ValueListenableBuilder<List<Character>>(
+              valueListenable: GameManager().characterManager.characters,
+              builder: (context, characters, _) {
+                return ListView.builder(
+                  itemCount: characters.length,
+                  itemBuilder: (context, index) {
+                    Character character = characters[index];
+                    return CharacterStatsWidget(
+                      character: character,
+                      isSelected: selectedCharacter == character,
+                      onTap: () => _selectCharacter(character),
+                    );
+                  },
                 );
               },
             ),
           ),
+
           // Right Side: Action interface
           Expanded(
             flex: 1,
             child: selectedCharacter != null
                 ? ActionInterface(
               character: selectedCharacter!,
-              characters: characters, // Pass the characters list
+              //characters: characters, // Pass the characters list
               onUpdate: () {
                 setState(() {
                   // Update UI when character changes
@@ -214,19 +234,17 @@ class _MyHomePageState extends State<MyHomePage> {
 // ActionInterface Widget
 class ActionInterface extends StatelessWidget {
   final Character character;
-  final List<Character> characters; // Add this line
   final VoidCallback onUpdate;
 
   const ActionInterface({
     Key? key,
     required this.character,
-    required this.characters, // Add this line
     required this.onUpdate,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // Mockup actions
+    // Actions
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -241,8 +259,7 @@ class ActionInterface extends StatelessWidget {
               // Show the target picker dialog
               Character? target = await showTargetPickerDialog(
                 context,
-                characters, // Pass the list of characters
-                character,  // The attacker
+                character, // The attacker
               );
 
               if (target != null) {
@@ -262,6 +279,7 @@ class ActionInterface extends StatelessWidget {
             child: const Text('Attack'),
           ),
 
+
           const SizedBox(height: 8),
           ElevatedButton(
             onPressed: () {
@@ -277,7 +295,8 @@ class ActionInterface extends StatelessWidget {
             onPressed: () {
               // Mockup: Apply modifier
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Modifier applied to ${character.name}!')),
+                SnackBar(
+                    content: Text('Modifier applied to ${character.name}!')),
               );
             },
             child: const Text('Apply Modifier'),
@@ -292,19 +311,20 @@ class ActionInterface extends StatelessWidget {
                   'Abilities:',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
-                ...character.abilities.map((ability) => ListTile(
-                  title: Text(ability.name),
-                  subtitle: Text(ability.description),
-                  trailing: Text('Cost: ${ability.cost} AP'),
-                  onTap: () {
-                    // Mockup: Activate ability
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                          content: Text(
-                              '${character.name} uses ${ability.name}!')),
-                    );
-                  },
-                )),
+                ...character.abilities.map((ability) =>
+                    ListTile(
+                      title: Text(ability.name),
+                      subtitle: Text(ability.description),
+                      trailing: Text('Cost: ${ability.cost} AP'),
+                      onTap: () {
+                        // Mockup: Activate ability
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                              content: Text(
+                                  '${character.name} uses ${ability.name}!')),
+                        );
+                      },
+                    )),
               ],
             ),
           // Display character's items (if any)
@@ -316,18 +336,19 @@ class ActionInterface extends StatelessWidget {
                   'Items:',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
-                ...character.items.map((item) => ListTile(
-                  title: Text(item.name),
-                  subtitle: Text(item.description),
-                  onTap: () {
-                    // Mockup: Use item
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                          content:
-                          Text('${character.name} uses ${item.name}!')),
-                    );
-                  },
-                )),
+                ...character.items.map((item) =>
+                    ListTile(
+                      title: Text(item.name),
+                      subtitle: Text(item.description),
+                      onTap: () {
+                        // Mockup: Use item
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                              content:
+                              Text('${character.name} uses ${item.name}!')),
+                        );
+                      },
+                    )),
               ],
             ),
         ],

@@ -1,10 +1,14 @@
 // target_picker.dart
 import 'package:flutter/material.dart';
-import 'models.dart'; // Import your models
+import 'models.dart';
+import 'game_manager.dart'; // Import GameManager
 
 // Function to show the target picker dialog
 Future<Character?> showTargetPickerDialog(
-    BuildContext context, List<Character> characters, Character attacker) async {
+    BuildContext context, Character attacker) async {
+  // Get the list of characters from CharacterManager
+  List<Character> characters = GameManager().characterManager.getCharacters();
+
   return showDialog<Character>(
     context: context,
     builder: (BuildContext context) {
