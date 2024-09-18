@@ -1,11 +1,11 @@
 // develop_manager.dart
 import 'models.dart';
-import 'game_manager.dart';
+import 'global.dart';
 
 class DevelopManager {
   void createDummyContent() {
     // Create dummy characters and add them to CharacterManager
-    GameManager().characterManager.addCharacter(
+    Global().characterManager.addCharacter(
       Character(
         name: 'Warrior',
         player: 'Player 1',
@@ -24,7 +24,7 @@ class DevelopManager {
       ),
     );
 
-    GameManager().characterManager.addCharacter(
+    Global().characterManager.addCharacter(
       Character(
         name: 'Ranger',
         player: 'Player 1',
@@ -43,7 +43,7 @@ class DevelopManager {
       ),
     );
 
-    GameManager().characterManager.addCharacter(
+    Global().characterManager.addCharacter(
       Character(
         name: 'Scout',
         player: 'Player 1',

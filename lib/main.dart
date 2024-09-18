@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'models.dart'; // Import your models
-import 'target_picker.dart'; // Import the target picker dialog
-import 'mechanics.dart'; // Import the mechanics
-import 'game_manager.dart';       // Import GameManager
-import 'character_manager.dart';  // Import CharacterManager
+import 'models.dart';
+import 'target_picker.dart';
+import 'mechanics.dart';
+import 'global.dart';
 
 
 
@@ -97,11 +96,11 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
 
-    // Initialize the GameManager
-    GameManager().init();
+    // Initialize the Global
+    Global().init();
 
     // Begin processes like loading game state or creating dummy content
-    GameManager().begin();
+    Global().begin();
 
 
   }
@@ -136,7 +135,7 @@ class _MyHomePageState extends State<MyHomePage> {
           Expanded(
             flex: 1,
             child: ValueListenableBuilder<List<Character>>(
-              valueListenable: GameManager().characterManager.characters,
+              valueListenable: Global().characterManager.characters,
               builder: (context, characters, _) {
                 return ListView.builder(
                   itemCount: characters.length,

@@ -1,16 +1,18 @@
-// game_manager.dart
+// global.dart
 import 'character_manager.dart';
 import 'develop_manager.dart';
 
-class GameManager {
+
+// Global Singleton
+class Global {
   // Private constructor
-  GameManager._privateConstructor();
+  Global._privateConstructor();
 
   // Single instance
-  static final GameManager _instance = GameManager._privateConstructor();
+  static final Global _instance = Global._privateConstructor();
 
   // Factory constructor to return the same instance
-  factory GameManager() {
+  factory Global() {
     return _instance;
   }
 
