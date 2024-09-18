@@ -97,63 +97,13 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
 
-    // Initialize the characters via CharacterManager
-    GameManager().characterManager.addCharacter(
-      Character(
-        name: 'Warrior',
-        player: 'Player 1',
-        P: 7,
-        A: 4,
-        W: 4,
-        maxHP: 17,
-        HP: 17,
-        AP: 9,
-        MR: 3,
-        abilities: [],
-        items: [],
-        size: 'Large',
-        fandomTrait: 'Superhero',
-        role: 'Warrior',
-      ),
-    );
+    // Initialize the GameManager
+    GameManager().init();
 
-    GameManager().characterManager.addCharacter(
-      Character(
-        name: 'Ranger',
-        player: 'Player 1',
-        P: 4,
-        A: 5,
-        W: 6,
-        maxHP: 14,
-        HP: 14,
-        AP: 11,
-        MR: 3,
-        abilities: [],
-        items: [],
-        size: 'Medium',
-        fandomTrait: 'Anime',
-        role: 'Ranger',
-      ),
-    );
+    // Begin processes like loading game state or creating dummy content
+    GameManager().begin();
 
-    GameManager().characterManager.addCharacter(
-      Character(
-        name: 'Scout',
-        player: 'Player 1',
-        P: 3,
-        A: 7,
-        W: 5,
-        maxHP: 13,
-        HP: 13,
-        AP: 10,
-        MR: 4,
-        abilities: [],
-        items: [],
-        size: 'Small',
-        fandomTrait: 'Fantasy Creature',
-        role: 'Scout',
-      ),
-    );
+
   }
 
   // FloatingActionButton callback (to be implemented later)
@@ -216,7 +166,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 });
               },
             )
-                : Center(
+                : const Center(
               child: Text('Select a character to view actions'),
             ),
           ),

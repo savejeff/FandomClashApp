@@ -1,5 +1,6 @@
 // game_manager.dart
 import 'character_manager.dart';
+import 'develop_manager.dart';
 
 class GameManager {
   // Private constructor
@@ -15,6 +16,17 @@ class GameManager {
 
   // Manager classes
   final CharacterManager characterManager = CharacterManager();
+  final DevelopManager developManager = DevelopManager();
 
-  // You can add other managers here (e.g., ItemManager, AbilityManager)
+  // init() method to initialize all components
+  void init() {
+    // Initialize components if needed
+    // For now, there may be nothing specific to initialize
+  }
+
+  // begin() method to start processes like loading game state
+  void begin() {
+    // For development, create dummy content
+    developManager.createDummyContent();
+  }
 }
