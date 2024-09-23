@@ -3,23 +3,6 @@ import 'models.dart';
 import 'util.dart';
 import 'dart:math';
 
-/// Function to handle character movement
-String moveCharacter(Character character, Point<double> newPosition) {
-  double x1 = 0; //character.position.x;
-  double y1 = 0; //character.position.y;
-  double x2 = newPosition.x;
-  double y2 = newPosition.y;
-
-  double distance = sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2));
-  double unitsMoved = distance;
-
-  if (unitsMoved <= character.MR) {
-    character.position = newPosition;
-    return "${character.name} moves to position (${character.position.x}, ${character.position.y}).";
-  } else {
-    return "${character.name} cannot move that far. Maximum movement range is ${character.MR} units.";
-  }
-}
 
 /// Function to handle attacks
 String attack(

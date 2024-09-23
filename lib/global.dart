@@ -1,6 +1,6 @@
 // global.dart
-import 'character_manager.dart';
-import 'develop_manager.dart';
+import 'modules/character_manager.dart';
+import 'modules/develop_manager.dart';
 
 
 // Global Singleton

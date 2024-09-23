@@ -1,6 +1,6 @@
 // develop_manager.dart
-import 'models.dart';
-import 'global.dart';
+import '../models.dart';
+import '../global.dart';
 
 class DevelopManager {
   void createDummyContent() {
