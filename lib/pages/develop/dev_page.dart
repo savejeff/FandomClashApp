@@ -102,6 +102,9 @@ class _DevPageState extends State<DevPage> {
       /************************************************************/
 
     }
+
+    UpdateUI();
+
   }
 
 
@@ -124,18 +127,15 @@ class _DevPageState extends State<DevPage> {
 
         // Example: Add status and output texts
         txtStatus.write("Dev: 1\n");
+        txtStatus.write(format("Millis: %d\n", [millis()]));
 
-        if (debugTxtStatus.isNotEmpty) {
-          txtStatus.write("\n$debugTxtStatus");
-        }
+        //if (debugTxtStatus.isNotEmpty) {
+        // txtStatus.write("\n$debugTxtStatus");
+        //}
 
-        if (debugTxtOut.isNotEmpty) {
-          txtOut.write("\n$debugTxtOut");
-        }
 
         setState(() {
-          debugTxtStatus = txtStatus.toString();
-          debugTxtOut = txtOut.toString();
+         debugTxtStatus = txtStatus.toString();
         });
 
         updateRunning = false;
@@ -155,7 +155,7 @@ class _DevPageState extends State<DevPage> {
         children: [
           // Left side: Status and Log
           Expanded(
-            flex: 1,
+            flex: 2,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(
@@ -165,7 +165,7 @@ class _DevPageState extends State<DevPage> {
                     child: SingleChildScrollView(
                       child: Text(
                         'Status:\n$debugTxtStatus',
-                        style: TextStyle(fontFamily: 'monospace', height: 1.5),
+                        style: TextStyle(fontFamily: 'RobotoMono'),
                       ),
                     ),
                   ),
@@ -174,7 +174,7 @@ class _DevPageState extends State<DevPage> {
                     child: SingleChildScrollView(
                       child: Text(
                         'Output:\n$debugTxtOut',
-                        style: TextStyle(fontFamily: 'monospace', height: 1.5),
+                        style: TextStyle(fontFamily: 'RobotoMono'),
                       ),
                     ),
                   ),
@@ -215,10 +215,10 @@ class _DevPageState extends State<DevPage> {
   void onButtonPressed(int index) {
     switch (index) {
       case 0:
-        LogX('Button 0 Pressed: Rebuild Time Segments');
+        LogX('Button 0 Pressed');
         break;
       case 1:
-        LogX('Button 1 Pressed: Clear Time Segments');
+        LogX('Button 1 Pressed');
         LogClear();
         break;
     // Add more cases for other buttons
