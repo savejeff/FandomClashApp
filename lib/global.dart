@@ -1,6 +1,11 @@
 // global.dart
+import 'package:fandom_clash/modules/game_manager.dart';
+
+import 'util.dart';
+
 import 'modules/character_manager.dart';
 import 'modules/develop_manager.dart';
+import 'modules/game_manager.dart';
 
 
 // Global Singleton
@@ -18,10 +23,13 @@ class Global {
 
   // Manager classes
   final CharacterManager characterManager = CharacterManager();
+  final GameManager GameMan = GameManager();
   final DevelopManager developManager = DevelopManager();
+
 
   // init() method to initialize all components
   void init() {
+    millis();
     // Initialize components if needed
     // For now, there may be nothing specific to initialize
   }

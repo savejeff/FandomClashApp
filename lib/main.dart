@@ -5,7 +5,7 @@ import 'mechanics.dart';
 import 'global.dart';
 
 import 'pages/main_page.dart';
-import 'pages/dev_page.dart';
+import 'pages/develop/dev_page.dart';
 
 
 

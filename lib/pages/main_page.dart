@@ -4,7 +4,7 @@ import '../target_picker.dart';
 import '../mechanics.dart';
 import '../global.dart';
 
-import 'dev_page.dart';
+import 'develop/dev_page.dart';
 
 import '../widgets/character_stats_widget.dart';
 import '../widgets/action_interface_widget.dart';
@@ -64,7 +64,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => FirstPage()),
+        MaterialPageRoute(builder: (context) => DevPage()),
       );
 
     });
@@ -73,6 +73,7 @@ class _MyHomePageState extends State<MyHomePage> {
   // Function to handle character selection
   void _selectCharacter(Character character) {
     setState(() {
+      Global().GameMan.character_selected = character;
       selectedCharacter = character;
     });
   }
@@ -114,10 +115,10 @@ class _MyHomePageState extends State<MyHomePage> {
           // Right Side: Action interface
           Expanded(
             flex: 1,
-            child: selectedCharacter != null
+            //child: selectedCharacter != null
+            child: Global().GameMan.character_selected != null
                 ? ActionInterface(
-              character: selectedCharacter!,
-              //characters: characters, // Pass the characters list
+              character: Global().GameMan.character_selected!,
               onUpdate: () {
                 setState(() {
                   // Update UI when character changes
