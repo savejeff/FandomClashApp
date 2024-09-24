@@ -4,14 +4,15 @@ import '../target_picker.dart';
 import '../mechanics.dart';
 import '../global.dart';
 
+import '../widgets/character_list_widget.dart';
+
 import 'develop/dev_page.dart';
 //import 'develop/dev_page_basics_stateful_widget.dart';
 //import 'develop/dev_page_fragment.dart';
 //import 'develop/dev_page_widget_state_inheritance.dart';
 
 
-import '../widgets/character_stats_widget.dart';
-import '../widgets/action_interface_widget.dart';
+import '../widgets/character_interaction_interface_widget.dart';
 
 
 
@@ -27,24 +28,22 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightBlue),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Fandom Clash: Homefront Edition'),
+      home: const MainPage(title: 'Fandom Clash: Homefront Edition'),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+class MainPage extends StatefulWidget {
+  const MainPage({super.key, required this.title});
 
   final String title;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<MainPage> createState() => _MainPageState();
 }
 
 
-class _MyHomePageState extends State<MyHomePage> {
-  // Remove the characters list from the state
-  // late List<Character> characters;
+class _MainPageState extends State<MainPage> {
 
   // Currently selected character
   Character? selectedCharacter;
@@ -58,29 +57,46 @@ class _MyHomePageState extends State<MyHomePage> {
 
     // Begin processes like loading game state or creating dummy content
     Global().begin();
-
   }
 
-  // FloatingActionButton callback (to be implemented later)
-  void _incrementCounter() {
-    setState(() {
-      // Logic to create new units will go here
+  /****************************************************************************/
 
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => DevPage()),
+  // FloatingActionButton callback
+  void _onClick_FAB() {
+    if (true) {
+      setState(() {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => DevPage()));
+      });
+    }
+
+    if (false) {
+      Character char_new = Character(
+        name: 'Warrior',
+        player: 'Player 1',
+        P: 7,
+        A: 4,
+        W: 4,
+        maxHP: 17,
+        HP: 17,
+        AP: 9,
+        MR: 3,
+        abilities: [],
+        items: [],
+        size: 'Large',
+        fandomTrait: 'Superhero',
+        role: 'Warrior',
       );
 
-    });
+
+      setState(() {
+        Global().characterManager.addCharacter(char_new);
+      });
+    }
   }
 
-  // Function to handle character selection
-  void _selectCharacter(Character character) {
-    setState(() {
-      Global().GameMan.character_selected = character;
-      selectedCharacter = character;
-    });
-  }
+
+  /****************************************************************************/
 
   @override
   Widget build(BuildContext context) {
@@ -95,37 +111,30 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Row(
         children: [
 
-          // Left Side: List of characters
+          // Left Side
           Expanded(
             flex: 1,
-            child: ValueListenableBuilder<List<Character>>(
-              valueListenable: Global().characterManager.characters,
-              builder: (context, characters, _) {
-                return ListView.builder(
-                  itemCount: characters.length,
-                  itemBuilder: (context, index) {
-                    Character character = characters[index];
-                    return CharacterStatsWidget(
-                      character: character,
-                      isSelected: selectedCharacter == character,
-                      onTap: () => _selectCharacter(character),
-                    );
-                  },
-                );
-              },
+            child:
+            CharacterListWidget(
+                characters: Global().characterManager.characters,
+                onSelected: (character) {
+                  setState(() {
+                    selectedCharacter = character;
+                  });
+                }
             ),
           ),
 
-          // Right Side: Action interface
+
+          // Right Side: CharacterInteractionInterfaceWidget
           Expanded(
             flex: 1,
-            //child: selectedCharacter != null
-            child: Global().GameMan.character_selected != null
-                ? ActionInterface(
-              character: Global().GameMan.character_selected!,
+            child: selectedCharacter != null
+                ? CharacterInteractionInterfaceWidget(
+              character: selectedCharacter!,
               onUpdate: () {
                 setState(() {
-                  // Update UI when character changes
+                  // Update UI when the character interaction changes
                 });
               },
             )
@@ -136,7 +145,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+        onPressed: _onClick_FAB,
         tooltip: 'Add Character',
         child: const Icon(Icons.add),
       ), // FloatingActionButton kept for later use

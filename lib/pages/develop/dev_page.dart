@@ -4,6 +4,7 @@ import 'dart:async';
 import '../../util.dart';
 import 'dev_base.dart';
 
+import '../../widgets/value_modifier_widget.dart';
 
 
 class DevPage extends StatefulWidget {
@@ -23,6 +24,8 @@ class _DevPageState extends DevPageBaseState<DevPage> {
 
   // Initial incrementStep for the Counter widget
   int incrementStep = 1;
+
+  int selectedValue = 0;
 
   /*******************************************************/
 
@@ -120,7 +123,15 @@ class _DevPageState extends DevPageBaseState<DevPage> {
   Widget _buildDevElements() {
     return
     //************************* dev element here ***************************
-      Text("Example Element")
+      IntegerModifierWidget(
+        label: "HP",
+        initialValue: selectedValue,
+        onValueChanged: (value) {
+          setState(() {
+            selectedValue = value;
+          });
+        }, // Handle value changes
+      )
     //**********************************************************************
     ;
   }
