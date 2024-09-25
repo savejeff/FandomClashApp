@@ -9,7 +9,7 @@ import 'modules/game_manager.dart';
 
 
 class BuildConfig {
-  static const bool ENABLE_DEVELOP = false;
+  static const bool ENABLE_DEVELOP = true;
 }
 
 
@@ -44,4 +44,31 @@ class Global {
     // For development, create dummy content
     developManager.createDummyContent();
   }
+
+
+  String _sys_log = "";
+
+  String get SysLog => _sys_log;
+
+
+  // Logs a formatted message into the log
+  void Log(String tag, String sformat, [List<Object>? args]) {
+    String msg = args == null ? sformat : format(sformat, args);
+
+    String log_line = "[+${millis()}] $msg";
+
+    _sys_log += "$log_line\n";
+
+    print(log_line); // For debugging in the console
+
+  }
+
 }
+
+void Log(String tag, String sformat, [List<Object>? args]) {
+  Global().Log(tag, sformat, args);
+}
+
+
+
+

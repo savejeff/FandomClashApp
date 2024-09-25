@@ -1,10 +1,15 @@
+import 'package:json_annotation/json_annotation.dart';
+
 import 'dart:ffi';
 import 'dart:math';
 
 import 'defines.dart';
 import 'util.dart';
 
+part 'models.g.dart';
 
+
+@JsonSerializable()
 class Effect {
 
   // TODO
@@ -15,8 +20,18 @@ class Effect {
   });
 
 
+
+  // Factory method for creating a new Character instance from a map.
+  factory Effect.fromJson(Map<String, dynamic> json) =>
+      _$EffectFromJson(json);
+
+  // Method to convert Character instance into a map.
+  Map<String, dynamic> toJson() => _$EffectToJson(this);
+
 }
 
+
+@JsonSerializable()
 class Ability {
   String name;
   int cost; // AP cost
@@ -29,9 +44,19 @@ class Ability {
     required this.description,
     this.effect,
   });
+
+
+  // Factory method for creating a new Character instance from a map.
+  factory Ability.fromJson(Map<String, dynamic> json) =>
+      _$AbilityFromJson(json);
+
+  // Method to convert Character instance into a map.
+  Map<String, dynamic> toJson() => _$AbilityToJson(this);
+
 }
 
 
+@JsonSerializable()
 class Item {
   String name;
   String itemType; // e.g., 'weapon', 'shield', 'consumable'
@@ -46,10 +71,21 @@ class Item {
     required this.uses,
     this.effect,
   });
+
+
+  // Factory method for creating a new Character instance from a map.
+  factory Item.fromJson(Map<String, dynamic> json) =>
+      _$ItemFromJson(json);
+
+  // Method to convert Character instance into a map.
+  Map<String, dynamic> toJson() => _$ItemToJson(this);
+
 }
 
 
 
+
+@JsonSerializable()
 class Character {
   String name;
   String player;
@@ -63,7 +99,6 @@ class Character {
   List<Ability> abilities;
   List<Item> items;
   String size; // 'Small', 'Medium', or 'Large'
-  Point position; // (x, y) coordinates in grid units
   String? fandomTrait; // e.g., 'Anime', 'Superhero'
   String? role; // e.g., 'Warrior', 'Ranger'
 
@@ -93,7 +128,7 @@ class Character {
     this.tempA = 0,
     this.tempP = 0,
     this.tempW = 0,
-  }) : position = position ?? Point(0, 0);
+  });
 
   bool get isAlive => HP > 0;
 
@@ -107,6 +142,15 @@ class Character {
   modifyHP(int hp_delta) {
 
   }
+
+
+  // Factory method for creating a new Character instance from a map.
+  factory Character.fromJson(Map<String, dynamic> json) =>
+      _$CharacterFromJson(json);
+
+  // Method to convert Character instance into a map.
+  Map<String, dynamic> toJson() => _$CharacterToJson(this);
+
 
 }
 

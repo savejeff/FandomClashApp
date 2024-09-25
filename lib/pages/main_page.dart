@@ -1,4 +1,10 @@
+import 'dart:convert';
+
+import 'package:fandom_clash/content_builtin.dart';
 import 'package:flutter/material.dart';
+import 'package:json_annotation/json_annotation.dart';
+
+
 import '../models.dart';
 import '../target_picker.dart';
 import '../mechanics.dart';
@@ -60,9 +66,10 @@ class _MainPageState extends State<MainPage> {
   // FloatingActionButton callback
   void _onClick_Develop() {
     if (true) {
-      setState(() {
-        Global().GameMan.turn += 1;
-      });
+      // Convert to JSON string
+      final jsonString = jsonEncode(effect_healing_2hp.toJson());
+      Log("Main", 'Encoded JSON: $jsonString');
+      setState(() {});
     }
 
     if (false) {
@@ -143,7 +150,7 @@ class _MainPageState extends State<MainPage> {
         children: [
           // Left Side
           Expanded(
-            flex: 1,
+            flex: 2,
             child: CharacterListWidget(
                 characters: Global().characterManager.characters,
                 onSelected: (character) {
@@ -155,7 +162,7 @@ class _MainPageState extends State<MainPage> {
 
           // Right Side: CharacterInteractionInterfaceWidget
           Expanded(
-            flex: 1,
+            flex: 2,
             child: selectedCharacter != null
                 ? CharacterInteractionInterfaceWidget(
                     character: selectedCharacter!,
@@ -169,8 +176,15 @@ class _MainPageState extends State<MainPage> {
                     child: Text('Select a character to view actions'),
                   ),
           ),
+
+          // Right Side: CharacterInteractionInterfaceWidget
+          Expanded(
+            flex: 1,
+            child: Text(Global().SysLog)
+          ),
         ],
       ),
+
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           if (Global().GameMan.turn_active) {
