@@ -1,12 +1,27 @@
-
+import 'dart:ffi';
 import 'dart:math';
 
+import 'defines.dart';
+import 'util.dart';
+
+
+class Effect {
+
+  // TODO
+  int? user_modifier_hp;
+
+  Effect({
+    this.user_modifier_hp,
+  });
+
+
+}
 
 class Ability {
   String name;
   int cost; // AP cost
   String description;
-  Function? effect; // Function to apply the ability effect
+  Effect? effect; // Function to apply the ability effect
 
   Ability({
     required this.name,
@@ -21,12 +36,14 @@ class Item {
   String name;
   String itemType; // e.g., 'weapon', 'shield', 'consumable'
   String description;
-  Function? effect; // Function to apply the item's effect
+  Effect? effect; // Function to apply the item's effect
+  int uses; // how many times this item can be used. -1 for infinite
 
   Item({
     required this.name,
     required this.itemType,
     required this.description,
+    required this.uses,
     this.effect,
   });
 }
@@ -68,7 +85,7 @@ class Character {
     required this.MR,
     this.abilities = const [],
     this.items = const [],
-    this.size = 'Medium',
+    this.size = FIGURE_SIZE_MEDIUM,
     Point? position,
     this.fandomTrait,
     this.role,
@@ -80,41 +97,16 @@ class Character {
 
   bool get isAlive => HP > 0;
 
-  // Method to apply temporary modifiers
-  void applyTempModifiers() {
-    HP += tempHP;
-    A += tempA;
-    P += tempP;
-    W += tempW;
-    // Reset temporary modifiers after applying
-    tempHP = 0;
-    tempA = 0;
-    tempP = 0;
-    tempW = 0;
+  int get totalP => this.P + tempP;
+  int get totalA => this.A + tempA;
+  int get totalW => this.W + tempW;
+
+
+  //****************************************
+
+  modifyHP(int hp_delta) {
+
   }
+
 }
 
-class GameState {
-  List<Character> characters;
-  int currentTurn;
-  List<String> players;
-  Map<String, dynamic> terrain; // For environmental interactions
-
-  GameState({
-    required this.characters,
-    this.currentTurn = 0,
-    this.players = const [],
-    this.terrain = const {},
-  });
-
-  // Method to advance the turn
-  void nextTurn() {
-    currentTurn += 1;
-    // Additional logic for turn management can be added here
-  }
-
-  // Method to get characters belonging to a player
-  List<Character> getCharactersByPlayer(String playerName) {
-    return characters.where((char) => char.player == playerName).toList();
-  }
-}

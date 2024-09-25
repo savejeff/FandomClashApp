@@ -125,7 +125,7 @@ class _DevPageState extends DevPageBaseState<DevPage> {
     //************************* dev element here ***************************
       IntegerModifierWidget(
         label: "HP",
-        initialValue: selectedValue,
+        value: selectedValue,
         onValueChanged: (value) {
           setState(() {
             selectedValue = value;

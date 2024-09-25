@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-
+/*
 
 class IntegerModifierWidget extends StatefulWidget {
   final int initialValue;
@@ -92,6 +92,80 @@ class _IntegerModifierWidgetState extends State<IntegerModifierWidget> {
           IconButton(
             icon: Icon(Icons.remove),
             onPressed: _decrementValue,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+
+ */
+
+class IntegerModifierWidget extends StatelessWidget {
+  final int value;
+  final void Function(int) onValueChanged;
+  final String label;
+
+  const IntegerModifierWidget({
+    Key? key,
+    required this.value, // Pass the current value from parent
+    required this.onValueChanged, // Callback to modify value
+    required this.label,
+  }) : super(key: key);
+
+  void _incrementValue() {
+    onValueChanged(value + 1); // Call the parent callback with new value
+  }
+
+  void _decrementValue() {
+    onValueChanged(value - 1); // Call the parent callback with new value
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final containerColor = theme.colorScheme.primaryContainer;
+    final backgroundColor = theme.colorScheme.surfaceContainerHighest;
+
+    return Container(
+      padding: EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            label,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+              color: Colors.black,
+            ),
+          ),
+          SizedBox(height: 10),
+          IconButton(
+            icon: Icon(Icons.add),
+            onPressed: _incrementValue, // Increment on button press
+          ),
+          Container(
+            padding: EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: containerColor,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Text(
+              '$value', // Display the passed value
+              style: TextStyle(
+                fontSize: 24,
+              ),
+            ),
+          ),
+          IconButton(
+            icon: Icon(Icons.remove),
+            onPressed: _decrementValue, // Decrement on button press
           ),
         ],
       ),

@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import '../models.dart';
 import '../mechanics.dart';
@@ -15,6 +17,54 @@ class ActionInterface extends StatelessWidget {
     required this.onUpdate,
   }) : super(key: key);
 
+  //*********************************************************************************
+
+  void _onClick_Attack(BuildContext context) async {
+    // Show the target picker dialog
+    Character? target = await showTargetPickerDialog(
+      context,
+      character, // The attacker
+    );
+
+    if (target != null) {
+      // Proceed with the attack logic
+      String result = attack(character, target);
+      onUpdate(); // Update the UI
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(result)),
+      );
+    } else {
+      // Attack was canceled
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Attack canceled')),
+      );
+    }
+  }
+
+  void _onClick_ApplyModifier(BuildContext context) async {
+    // Mockup: Apply modifier
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Modifier applied to ${character.name}!')),
+    );
+  }
+
+  void _onClick_UseAbility(BuildContext context, Ability ability, Character user, Character? target) async {
+
+
+    String result_str = useAbility(user, ability);
+    onUpdate(); // Update the UI
+
+    // Mockup: Activate ability
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+          content: Text(
+              '${character.name} uses ${ability.name}! $result_str')
+      ),
+    );
+  }
+
+  //*********************************************************************************
+
   @override
   Widget build(BuildContext context) {
     // Actions
@@ -26,55 +76,46 @@ class ActionInterface extends StatelessWidget {
             'Actions for ${character.name}',
             style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
-          const SizedBox(height: 16),
-          ElevatedButton(
-            onPressed: () async {
-              // Show the target picker dialog
-              Character? target = await showTargetPickerDialog(
-                context,
-                character, // The attacker
-              );
-
-              if (target != null) {
-                // Proceed with the attack logic
-                String result = attack(character, target);
-                onUpdate(); // Update the UI
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(result)),
-                );
-              } else {
-                // Attack was canceled
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Attack canceled')),
-                );
-              }
-            },
-            child: const Text('Attack'),
+          Padding(
+            padding: const EdgeInsets.only(top: 16.0),
+            // Add padding between the Text and the Row
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              // Center the buttons within the row
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  // Add horizontal padding between buttons
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      _onClick_Attack(context);
+                    },
+                    child: const Text('Attack'),
+                  ),
+                ),
+                /*Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  // Add horizontal padding between buttons
+                  child: ElevatedButton(
+                    onPressed: () {
+                      _onClick_UseAbility(context);
+                    },
+                    child: const Text('Use Ability'),
+                  ),
+                ),*/
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  // Add horizontal padding between buttons
+                  child: ElevatedButton(
+                    onPressed: () {
+                      _onClick_ApplyModifier(context);
+                    },
+                    child: const Text('Apply Modifier'),
+                  ),
+                ),
+              ],
+            ),
           ),
-
-
-          const SizedBox(height: 8),
-          ElevatedButton(
-            onPressed: () {
-              // Mockup: Use ability
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('${character.name} uses an ability!')),
-              );
-            },
-            child: const Text('Use Ability'),
-          ),
-          const SizedBox(height: 8),
-          ElevatedButton(
-            onPressed: () {
-              // Mockup: Apply modifier
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                    content: Text('Modifier applied to ${character.name}!')),
-              );
-            },
-            child: const Text('Apply Modifier'),
-          ),
-          const SizedBox(height: 16),
           // Display character's abilities (if any)
           if (character.abilities.isNotEmpty)
             Column(
@@ -84,18 +125,12 @@ class ActionInterface extends StatelessWidget {
                   'Abilities:',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
-                ...character.abilities.map((ability) =>
-                    ListTile(
+                ...character.abilities.map((ability) => ListTile(
                       title: Text(ability.name),
                       subtitle: Text(ability.description),
                       trailing: Text('Cost: ${ability.cost} AP'),
                       onTap: () {
-                        // Mockup: Activate ability
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                              content: Text(
-                                  '${character.name} uses ${ability.name}!')),
-                        );
+                        _onClick_UseAbility(context, ability, character, null);
                       },
                     )),
               ],
@@ -109,8 +144,7 @@ class ActionInterface extends StatelessWidget {
                   'Items:',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
-                ...character.items.map((item) =>
-                    ListTile(
+                ...character.items.map((item) => ListTile(
                       title: Text(item.name),
                       subtitle: Text(item.description),
                       onTap: () {
@@ -118,7 +152,7 @@ class ActionInterface extends StatelessWidget {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                               content:
-                              Text('${character.name} uses ${item.name}!')),
+                                  Text('${character.name} uses ${item.name}!')),
                         );
                       },
                     )),

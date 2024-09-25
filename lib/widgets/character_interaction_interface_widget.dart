@@ -21,39 +21,33 @@ class CharacterInteractionInterfaceWidget extends StatefulWidget {
 }
 
 class _CharacterInteractionInterfaceWidgetState extends State<CharacterInteractionInterfaceWidget> {
-  int hp = 100;  // Initial values for HP, AP, and MP
-  int ap = 50;
-  int mp = 30;
+
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-
-    hp = widget.character.HP;
-    ap = widget.character.AP;
-    mp = widget.character.MR;
   }
 
   void _updateHP(int newValue) {
     setState(() {
-      hp = newValue;
-      widget.character.HP = hp;
+      widget.character.HP = newValue;
     });
+    widget.onUpdate();
   }
 
   void _updateAP(int newValue) {
     setState(() {
-      ap = newValue;
-      widget.character.AP = ap;
+      widget.character.AP = newValue;
     });
+    widget.onUpdate();
   }
 
   void _updateMP(int newValue) {
     setState(() {
-      mp = newValue;
-      widget.character.MR = mp;
+      widget.character.MR = newValue;
     });
+    widget.onUpdate();
   }
 
   @override
@@ -65,22 +59,22 @@ class _CharacterInteractionInterfaceWidgetState extends State<CharacterInteracti
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            // HP Modifier
+            // HP Modifier (pass current value and callback)
             IntegerModifierWidget(
-              initialValue: widget.character.HP,
-              onValueChanged: _updateHP,
+              value: widget.character.HP, // Pass current HP
+              onValueChanged: _updateHP, // Callback to update HP
               label: 'HP',
             ),
             // AP Modifier
             IntegerModifierWidget(
-              initialValue: ap,
-              onValueChanged: _updateAP,
+              value: widget.character.AP, // Pass current AP
+              onValueChanged: _updateAP, // Callback to update AP
               label: 'AP',
             ),
             // MP Modifier
             IntegerModifierWidget(
-              initialValue: mp,
-              onValueChanged: _updateMP,
+              value: widget.character.MR, // Pass current MP
+              onValueChanged: _updateMP, // Callback to update MP
               label: 'MP',
             ),
           ],

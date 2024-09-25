@@ -1,4 +1,6 @@
 // mechanics.dart
+import 'dart:ffi';
+
 import 'models.dart';
 import 'util.dart';
 import 'dart:math';
@@ -55,17 +57,32 @@ String attack(
   }
 }
 
+
+/// Applies a Effect and returns description modification / effect applied as string
+String applyEffect(Effect effect, Character user, Character? target) {
+  String effect_str = "";
+  if(effect.user_modifier_hp != null) {
+    user.HP = LIMIT(0, user.HP + effect.user_modifier_hp!, user.maxHP);
+    effect_str += "User added ${effect.user_modifier_hp} HP";
+  }
+
+  return effect_str;
+}
+
+
 /// Function to use an ability
 String useAbility(
     Character user,
-    Ability ability, {
+    Ability ability,
+    {
       Character? target,
-    }) {
+    }
+) {
   if (user.AP >= ability.cost) {
     user.AP -= ability.cost;
     // Apply the ability's effect
     if (ability.effect != null) {
-      return ability.effect!(user, target);
+      return applyEffect(ability.effect!, user, target);
     } else {
       return "${user.name} uses ${ability.name}.";
     }
@@ -73,6 +90,39 @@ String useAbility(
     return "${user.name} does not have enough AP to use ${ability.name}.";
   }
 }
+
+/// Function to pick up an item
+String pickUpItem(Character character, Item item) {
+  character.items.add(item);
+  return "${character.name} picks up ${item.name}.";
+}
+
+/// Function to use an item
+String useItem(Character character, Item item) {
+  if (character.items.contains(item)) {
+    if (item.effect != null) {
+      String result = applyEffect(item.effect!, character, null);
+      if(item.uses > 0) {
+        item.uses -= 1;
+
+        if(item.uses == 0)
+          character.items.remove(item); // Remove consumable items after use
+      }
+
+      return result;
+    } else {
+      return "${character.name} uses ${item.name}.";
+    }
+  } else {
+    return "${character.name} does not have ${item.name}.";
+  }
+}
+
+
+//*********************** deprecated *******************
+
+
+
 
 /// Example ability effect functions
 String healAbility(Character user, Character? target) {
@@ -87,6 +137,7 @@ String healAbility(Character user, Character? target) {
   return "${user.name} heals ${target.name} for $healAmount HP.";
 }
 
+
 String fireballAbility(Character user, List<Character> targets) {
   int damage = user.W + 2; // Damage as per the ability
   List<String> results = [];
@@ -99,27 +150,6 @@ String fireballAbility(Character user, List<Character> targets) {
         "${target.name} takes $damage fire damage and has ${target.HP} HP left.");
   }
   return results.join(' ');
-}
-
-/// Function to pick up an item
-String pickUpItem(Character character, Item item) {
-  character.items.add(item);
-  return "${character.name} picks up ${item.name}.";
-}
-
-/// Function to use an item
-String useItem(Character character, Item item) {
-  if (character.items.contains(item)) {
-    if (item.effect != null) {
-      String result = item.effect!(character);
-      character.items.remove(item); // Remove consumable items after use
-      return result;
-    } else {
-      return "${character.name} uses ${item.name}.";
-    }
-  } else {
-    return "${character.name} does not have ${item.name}.";
-  }
 }
 
 /// Example item effect function
