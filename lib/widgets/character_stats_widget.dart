@@ -33,15 +33,14 @@ class CharacterStatsWidget extends StatelessWidget {
                 const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
               Text('Player: ${character.player}'),
-              Text('Role: ${character.role ?? 'N/A'}'),
-              Text('Fandom: ${character.fandomTrait ?? 'N/A'}'),
+              Text('Role: ${character.role ?? 'N/A'} | Fandom: ${character.fandomTrait ?? 'N/A'}'),
               Text(''),
               Text('P: ${character.P} A: ${character.A} W: ${character.W}',
                 style:
                 const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),),
-              Text('HP: ${character.HP}/${character.maxHP}'),
-              Text('AP: ${character.AP}'),
               Text(''),
+              Text('HP: ${character.HP}/${character.maxHP} | AP: ${character.AP} | MR: ${character.MR}'),
+
               // Add more stats as needed
             ],
           ),

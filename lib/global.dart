@@ -8,6 +8,11 @@ import 'modules/develop_manager.dart';
 import 'modules/game_manager.dart';
 
 
+class BuildConfig {
+  static const bool ENABLE_DEVELOP = false;
+}
+
+
 // Global Singleton
 class Global {
   // Private constructor

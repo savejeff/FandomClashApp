@@ -7,14 +7,12 @@ import '../global.dart';
 import '../widgets/character_list_widget.dart';
 
 import 'develop/dev_page.dart';
+
 //import 'develop/dev_page_basics_stateful_widget.dart';
 //import 'develop/dev_page_fragment.dart';
 //import 'develop/dev_page_widget_state_inheritance.dart';
 
-
 import '../widgets/character_interaction_interface_widget.dart';
-
-
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -42,9 +40,7 @@ class MainPage extends StatefulWidget {
   State<MainPage> createState() => _MainPageState();
 }
 
-
 class _MainPageState extends State<MainPage> {
-
   // Currently selected character
   Character? selectedCharacter;
 
@@ -62,8 +58,14 @@ class _MainPageState extends State<MainPage> {
   /****************************************************************************/
 
   // FloatingActionButton callback
-  void _onClick_FAB() {
+  void _onClick_Develop() {
     if (true) {
+      setState(() {
+        Global().GameMan.turn += 1;
+      });
+    }
+
+    if (false) {
       setState(() {
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => DevPage()));
@@ -88,13 +90,30 @@ class _MainPageState extends State<MainPage> {
         role: 'Warrior',
       );
 
-
       setState(() {
         Global().characterManager.addCharacter(char_new);
       });
     }
   }
 
+  void _startTurn() {
+    if (Global().GameMan.turn_active) {
+      return;
+    }
+    // Logic to start the turn
+    print("Starting turn...");
+    // Set the turn_active to true or whatever your game logic requires
+    Global().GameMan.startTurn();
+    setState(() {}); // Trigger a UI update to reflect the new state
+  }
+
+  void _finishTurn() {
+    // Logic to finish the turn
+    print("Finishing turn...");
+    // Set the turn_active to false or whatever your game logic requires
+    Global().GameMan.finishTurn();
+    setState(() {}); // Trigger a UI update to reflect the new state
+  }
 
   /****************************************************************************/
 
@@ -102,53 +121,72 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
-        backgroundColor: Theme
-            .of(context)
-            .colorScheme
-            .inversePrimary,
+        title: Row(
+          children: [
+            Text(widget.title),
+            Expanded(flex: 1, child: Text("")),
+            Text("Turn ${Global().GameMan.turn} "),
+            if (BuildConfig.ENABLE_DEVELOP) ...[
+              ElevatedButton(
+                onPressed: () {
+                  _onClick_Develop();
+                },
+                child: const Text('Develop'),
+              ),
+            ],
+            Text("   ") // Some Padding
+          ],
+        ),
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
       body: Row(
         children: [
-
           // Left Side
           Expanded(
             flex: 1,
-            child:
-            CharacterListWidget(
+            child: CharacterListWidget(
                 characters: Global().characterManager.characters,
                 onSelected: (character) {
                   setState(() {
                     selectedCharacter = character;
                   });
-                }
-            ),
+                }),
           ),
-
 
           // Right Side: CharacterInteractionInterfaceWidget
           Expanded(
             flex: 1,
             child: selectedCharacter != null
                 ? CharacterInteractionInterfaceWidget(
-              character: selectedCharacter!,
-              onUpdate: () {
-                setState(() {
-                  // Update UI when the character interaction changes
-                });
-              },
-            )
+                    character: selectedCharacter!,
+                    onUpdate: () {
+                      setState(() {
+                        // Update UI when the character interaction changes
+                      });
+                    },
+                  )
                 : const Center(
-              child: Text('Select a character to view actions'),
-            ),
+                    child: Text('Select a character to view actions'),
+                  ),
           ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _onClick_FAB,
-        tooltip: 'Add Character',
-        child: const Icon(Icons.add),
-      ), // FloatingActionButton kept for later use
+        onPressed: () {
+          if (Global().GameMan.turn_active) {
+            _finishTurn(); // Call the method to finish the turn
+          } else {
+            _startTurn(); // Call the method to start the turn
+          }
+        },
+        tooltip: Global().GameMan.turn_active ? 'Finish Turn' : 'Start Turn',
+        // Update tooltip
+        child: Icon(
+          Global().GameMan.turn_active
+              ? Icons.stop
+              : Icons.play_arrow, // Update icon dynamically
+        ),
+      ),
     );
   }
 }
