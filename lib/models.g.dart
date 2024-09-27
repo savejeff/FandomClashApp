@@ -7,11 +7,13 @@ part of 'models.dart';
 // **************************************************************************
 
 Effect _$EffectFromJson(Map<String, dynamic> json) => Effect(
-      user_modifier_hp: (json['user_modifier_hp'] as num?)?.toInt(),
+      modifier_user_hp: (json['modifier_user_hp'] as num?)?.toInt(),
+      modifier_target_hp: (json['modifier_target_hp'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$EffectToJson(Effect instance) => <String, dynamic>{
-      'user_modifier_hp': instance.user_modifier_hp,
+      'modifier_user_hp': instance.modifier_user_hp,
+      'modifier_target_hp': instance.modifier_target_hp,
     };
 
 Ability _$AbilityFromJson(Map<String, dynamic> json) => Ability(

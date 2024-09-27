@@ -61,9 +61,9 @@ String attack(
 /// Applies a Effect and returns description modification / effect applied as string
 String applyEffect(Effect effect, Character user, Character? target) {
   String effect_str = "";
-  if(effect.user_modifier_hp != null) {
-    user.HP = LIMIT(0, user.HP + effect.user_modifier_hp!, user.maxHP);
-    effect_str += "User added ${effect.user_modifier_hp} HP";
+  if(effect.modifier_user_hp != null) {
+    user.HP = LIMIT(0, user.HP + effect.modifier_user_hp!, user.maxHP);
+    effect_str += "User added ${effect.modifier_user_hp} HP";
   }
 
   return effect_str;

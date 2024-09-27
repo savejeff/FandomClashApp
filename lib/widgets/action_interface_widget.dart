@@ -1,8 +1,9 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import '../models.dart';
 import '../mechanics.dart';
+
+import '../global.dart';
+
 
 import '../target_picker.dart';
 
@@ -24,6 +25,7 @@ class ActionInterface extends StatelessWidget {
     Character? target = await showTargetPickerDialog(
       context,
       character, // The attacker
+      Global().GameMan.characters // Targets
     );
 
     if (target != null) {

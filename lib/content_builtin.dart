@@ -15,7 +15,7 @@ Ability ability_battle_aura = Ability(
 );
 
 Effect effect_healing_2hp = Effect(
-  user_modifier_hp: 2
+  modifier_user_hp: 2
 );
 
 

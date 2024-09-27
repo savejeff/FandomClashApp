@@ -3,25 +3,80 @@ import '../models.dart';
 import 'package:flutter/material.dart';
 import '../defines.dart';
 
+import 'game_state.dart';
 
-class GameManager {
+class GameManager extends ChangeNotifier {
 
-  int turn = 0; // current turn
-  bool turn_active = false;
 
-  List<String> players = [];
+  GameState game_state = GameState(
+      turn: 0,
+      turn_active: false,
+      characters: [],
+      players: [],
+      character_selected: null);
 
-  // Use ValueNotifier to notify listeners when the list changes
-  Character? character_selected;
+  //****************************** State Backup ********************************
 
-  // Add a character
-  void selectCharacter(Character character) {
-    character_selected = character;
-
+  String State_Backup() {
+    return game_state.Stringify();
   }
 
+  //********************************* getter/setter ****************************
+
+  // Getters and Setters to notify listeners on changes
+  int get turn => game_state.turn;
+
+  set turn(int value) {
+    game_state.turn = value;
+    notifyListeners(); // Notify UI to update
+  }
+
+  bool get turn_active => game_state.turn_active;
+
+  set turn_active(bool value) {
+    game_state.turn_active = value;
+    notifyListeners();
+  }
+
+  List<String> get players => game_state.players;
+
+  set players(List<String> value) {
+    game_state.players = value;
+    notifyListeners();
+  }
+
+  Character? get character_selected => game_state.character_selected;
+
+  set character_selected(Character? value) {
+    game_state.character_selected = value;
+    notifyListeners();
+  }
+
+  List<Character> get characters => game_state.characters;
+
+  set characters(List<Character> value) {
+    game_state.characters = value;
+    notifyListeners(); // Notify when the list changes
+  }
+
+  //********************************* Characters *******************************
+
+  // Add a character
+  void addCharacter(Character character) {
+    game_state.characters.add(character);
+  }
+
+  //************************** selected Character ***********************
+
+  // Select a Character to be focused
+  void selectCharacter(Character character) {
+    character_selected = character;
+  }
+
+  //**************************** Turn ****************************
+
   bool startTurn() {
-    if(turn_active) {
+    if (turn_active) {
       return false;
     }
     turn += 1;
@@ -31,7 +86,7 @@ class GameManager {
   }
 
   bool finishTurn() {
-    if(!turn_active) {
+    if (!turn_active) {
       return false;
     }
 
@@ -39,5 +94,4 @@ class GameManager {
 
     return true;
   }
-
 }

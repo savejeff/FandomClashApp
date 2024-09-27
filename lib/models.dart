@@ -13,10 +13,12 @@ part 'models.g.dart';
 class Effect {
 
   // TODO
-  int? user_modifier_hp;
+  int? modifier_user_hp;
+  int? modifier_target_hp;
 
   Effect({
-    this.user_modifier_hp,
+    this.modifier_user_hp,
+    this.modifier_target_hp,
   });
 
 

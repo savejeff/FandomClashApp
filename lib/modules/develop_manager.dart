@@ -16,7 +16,7 @@ class DevelopManager {
     ];
 
     // Create dummy characters and add them to CharacterManager
-    Global().characterManager.addCharacter(
+    Global().GameMan.addCharacter(
       Character(
         name: 'Warrior',
         player: PLAYER_DEV_1,
@@ -38,7 +38,7 @@ class DevelopManager {
       ),
     );
 
-    Global().characterManager.addCharacter(
+    Global().GameMan.addCharacter(
       Character(
         name: 'Ranger',
         player: PLAYER_DEV_2,
@@ -57,7 +57,7 @@ class DevelopManager {
       ),
     );
 
-    Global().characterManager.addCharacter(
+    Global().GameMan.addCharacter(
       Character(
         name: 'Scout',
         player: PLAYER_DEV_2,

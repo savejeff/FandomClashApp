@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:fandom_clash/content_builtin.dart';
+import 'package:fandom_clash/modules/game_state.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -19,6 +20,7 @@ import 'develop/dev_page.dart';
 //import 'develop/dev_page_widget_state_inheritance.dart';
 
 import '../widgets/character_interaction_interface_widget.dart';
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -48,7 +50,7 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   // Currently selected character
-  Character? selectedCharacter;
+  //Character? selectedCharacter;
 
   @override
   void initState() {
@@ -67,8 +69,13 @@ class _MainPageState extends State<MainPage> {
   void _onClick_Develop() {
     if (true) {
       // Convert to JSON string
-      final jsonString = jsonEncode(effect_healing_2hp.toJson());
+      //final jsonString = jsonEncode(effect_healing_2hp.toJson());
+      final jsonString = Global().GameMan.State_Backup();
       Log("Main", 'Encoded JSON: $jsonString');
+      
+      final Map<String, dynamic> jsonMap = jsonDecode(jsonString);
+      final GameState game_state_new = GameState.fromJson(jsonMap);
+      Log("Main", "New State Character Count: %d", [game_state_new.characters.length]);
       setState(() {});
     }
 
@@ -98,7 +105,7 @@ class _MainPageState extends State<MainPage> {
       );
 
       setState(() {
-        Global().characterManager.addCharacter(char_new);
+        Global().GameMan.addCharacter(char_new);
       });
     }
   }
@@ -152,10 +159,11 @@ class _MainPageState extends State<MainPage> {
           Expanded(
             flex: 2,
             child: CharacterListWidget(
-                characters: Global().characterManager.characters,
+                characters: Global().GameMan.characters,
+                selectedCharacter: Global().GameMan.character_selected,
                 onSelected: (character) {
                   setState(() {
-                    selectedCharacter = character;
+                    Global().GameMan.character_selected = character;
                   });
                 }),
           ),
@@ -163,9 +171,9 @@ class _MainPageState extends State<MainPage> {
           // Right Side: CharacterInteractionInterfaceWidget
           Expanded(
             flex: 2,
-            child: selectedCharacter != null
+            child: Global().GameMan.character_selected != null
                 ? CharacterInteractionInterfaceWidget(
-                    character: selectedCharacter!,
+                    character: Global().GameMan.character_selected!,
                     onUpdate: () {
                       setState(() {
                         // Update UI when the character interaction changes

@@ -5,9 +5,8 @@ import 'global.dart'; // Import GameManager
 
 // Function to show the target picker dialog
 Future<Character?> showTargetPickerDialog(
-    BuildContext context, Character attacker) async {
-  // Get the list of characters from CharacterManager
-  List<Character> characters = Global().characterManager.getCharacters();
+    BuildContext context, Character attacker, List<Character> characters
+    ) async {
 
   return showDialog<Character>(
     context: context,

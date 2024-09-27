@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models.dart';
 
-
 // CharacterStatsWidget definition
 class CharacterStatsWidget extends StatelessWidget {
   final Character character;
@@ -33,13 +32,77 @@ class CharacterStatsWidget extends StatelessWidget {
                 const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
               Text('Player: ${character.player}'),
-              Text('Role: ${character.role ?? 'N/A'} | Fandom: ${character.fandomTrait ?? 'N/A'}'),
+              Text(
+                  'Role: ${character.role ?? 'N/A'} | Fandom: ${character
+                      .fandomTrait ?? 'N/A'}'),
               Text(''),
-              Text('P: ${character.P} A: ${character.A} W: ${character.W}',
+              /*Text(
+                'P: ${character.P} A: ${character.A} W: ${character.W}',
                 style:
-                const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),),
+                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              ),*/
+              Text.rich(
+                TextSpan(
+                  children: [
+                    TextSpan(
+                      text: 'P: ',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    TextSpan(
+                      text: '${character.P}   ',
+                      style: TextStyle(fontWeight: FontWeight.normal),
+                    ),
+                    TextSpan(
+                      text: 'A: ',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    TextSpan(
+                      text: '${character.A}   ',
+                      style: TextStyle(fontWeight: FontWeight.normal),
+                    ),
+                    TextSpan(
+                      text: 'W: ',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    TextSpan(
+                      text: '${character.W}',
+                      style: TextStyle(fontWeight: FontWeight.normal),
+                    ),
+                  ],
+                ),
+                style: TextStyle(fontSize: 16),
+              ),
+
               Text(''),
-              Text('HP: ${character.HP}/${character.maxHP} | AP: ${character.AP} | MR: ${character.MR}'),
+              //Text('HP: ${character.HP}/${character.maxHP} | AP: ${character.AP} | MR: ${character.MR}'),
+
+              Text.rich(
+                TextSpan(
+                  children: [
+                    TextSpan(
+                      text: 'HP: ',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    TextSpan(
+                      text: '${character.HP}/${character.maxHP} | ',
+                    ),
+                    TextSpan(
+                      text: 'AP: ',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    TextSpan(
+                      text: '${character.AP} | ',
+                    ),
+                    TextSpan(
+                      text: 'MR: ',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    TextSpan(
+                      text: '${character.MR}',
+                    ),
+                  ],
+                ),
+              ),
 
               // Add more stats as needed
             ],
@@ -49,4 +112,3 @@ class CharacterStatsWidget extends StatelessWidget {
     );
   }
 }
-
