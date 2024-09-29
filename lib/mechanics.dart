@@ -8,7 +8,7 @@ import 'util_game.dart';
 
 
 import 'defines.dart';
-
+import "global.dart";
 
 
 /// Function to handle attacks
@@ -18,6 +18,7 @@ String attack(
   String attackType = ATTACK_TYPE_MELEE,
   String defenderReaction = DEFENCE_TYPE_NONE,
 }) {
+
   // Determine attack and defense stats
   int attackStat;
   int baseDamage;
@@ -56,9 +57,13 @@ String attack(
     if (defender.HP < 0) {
       defender.HP = 0;
     }
-    return "${attacker.name} hits ${defender.name} for $damage damage. ${defender.name} has ${defender.HP} HP left.";
+
+    String msg = "${attacker.name} hits ${defender.name} for $damage damage. ${defender.name} has ${defender.HP} HP left.";
+
+    return msg;
   } else {
-    return "${attacker.name}'s attack misses ${defender.name}.";
+    String msg = "${attacker.name}'s attack misses ${defender.name}.";
+    return msg;
   }
 }
 

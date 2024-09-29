@@ -9,7 +9,11 @@ import '../target_picker.dart';
 import '../mechanics.dart';
 import '../modules/game_state.dart';
 
-import '../pages/develop/dev_page.dart';
+
+//import '../pages/develop/dev_page.dart';
+import '../pages/develop/dev_attack_analysis_page.dart';
+
+
 
 String reverseLines(String input) {
   // Split the input string by newline characters
@@ -46,7 +50,7 @@ class DevelopOverview extends StatelessWidget {
       if (true) {
         int turn = Global().GameMan.turn;
         turn -= 1;
-        Global().GameMan.RestoreTurn(turn);
+        Global().GameMan.restoreTurn(turn);
         onValueChanged(turn);
       }
 

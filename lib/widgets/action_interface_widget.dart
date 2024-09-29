@@ -10,6 +10,8 @@ import '../target_picker.dart';
 
 // ActionInterface Widget
 class ActionInterface extends StatelessWidget {
+  String get TAG => runtimeType.toString();
+
   final Character character;
   final VoidCallback onUpdate;
 
@@ -40,6 +42,7 @@ class ActionInterface extends StatelessWidget {
     if (target != null) {
       // Proceed with the attack logic
       String result = attack(character, target, attackType: type);
+      LogTurn(TAG, result);
       onUpdate(); // Update the UI
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(result)),

@@ -19,6 +19,16 @@ int millis_epoch() {
 
 //******************************************************************************************
 
+String getClassName_byInstance(Object instance) {
+  return instance.runtimeType.toString();
+}
+
+String getClassName<T>() {
+  return T.toString();
+}
+
+
+
 String format(String format, [List<Object>? args]) {
   String msg = format;
   try {

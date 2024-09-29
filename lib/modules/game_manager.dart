@@ -8,6 +8,9 @@ import 'package:fandom_clash/global.dart';
 
 
 class GameManager extends ChangeNotifier {
+  String get TAG => runtimeType.toString();
+
+
   GameState game_state = GameState(
       turn: 0,
       turn_active: false,
@@ -34,7 +37,7 @@ class GameManager extends ChangeNotifier {
     _history_game_state[game_state.turn] = game_state.Stringify();
   }
 
-  bool RestoreTurn(int turn) {
+  bool _history_load_turn(int turn) {
     if (_history_game_state.containsKey(turn)) {
       String game_state_str = _history_game_state[turn]!;
       game_state = GameState.fromJsonString(game_state_str);
@@ -54,6 +57,12 @@ class GameManager extends ChangeNotifier {
     if(BuildConfig.ENABLE_DEVELOP) {
       Global().developManager.onGameSetup();
     }
+  }
+
+  //****************************************************************************
+
+  LogTurn(String tag, String msg) {
+    game_state.eventlog += "[$tag] $msg";
   }
 
   //********************************* getter/setter ****************************
@@ -140,9 +149,17 @@ class GameManager extends ChangeNotifier {
     // finish turn
     turn_active = false;
 
+    game_state.character_selected = null;
+
     // backup for history
     BackupState();
 
     return true;
+  }
+
+  void restoreTurn(int turn) {
+    _history_load_turn(turn);
+    game_state.eventlog = "";
+    turn_active = false;
   }
 }

@@ -70,5 +70,11 @@ void Log(String tag, String sformat, [List<Object>? args]) {
 }
 
 
+void LogTurn(String tag, String sformat, [List<Object>? args]) {
+  Global().Log(tag, sformat, args);
+  Global().GameMan.LogTurn(tag, format(sformat, args));
+}
+
+
 
 

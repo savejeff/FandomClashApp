@@ -18,7 +18,7 @@ GameState _$GameStateFromJson(Map<String, dynamic> json) => GameState(
       characters: (json['characters'] as List<dynamic>)
           .map((e) => Character.fromJson(e as Map<String, dynamic>))
           .toList(),
-    );
+    )..eventlog = json['eventlog'] as String;
 
 Map<String, dynamic> _$GameStateToJson(GameState instance) => <String, dynamic>{
       'turn': instance.turn,
@@ -26,4 +26,5 @@ Map<String, dynamic> _$GameStateToJson(GameState instance) => <String, dynamic>{
       'players': instance.players,
       'character_selected': instance.character_selected,
       'characters': instance.characters,
+      'eventlog': instance.eventlog,
     };

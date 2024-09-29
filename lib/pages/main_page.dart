@@ -52,9 +52,6 @@ class _MainPageState extends State<MainPage> {
   /****************************************************************************/
 
   void _startTurn() {
-    if (Global().GameMan.turn_active) {
-      return;
-    }
     // Set the turn_active to true or whatever your game logic requires
     Global().GameMan.startTurn();
     setState(() {}); // Trigger a UI update to reflect the new state
@@ -83,7 +80,6 @@ class _MainPageState extends State<MainPage> {
                 });
               },
               child: const Text('Reset'),
-
             ),
             SizedBox(width: 10),
 
@@ -91,7 +87,7 @@ class _MainPageState extends State<MainPage> {
               ElevatedButton(
                 onPressed: () {
                   setState(() {
-                    Global().GameMan.RestoreTurn(Global().GameMan.turn - 1);
+                    Global().GameMan.restoreTurn(Global().GameMan.turn - 1);
                   });
                 },
                 child: const Text('Revert Turn'),
@@ -108,7 +104,7 @@ class _MainPageState extends State<MainPage> {
               ElevatedButton(
                 onPressed: () {
                   setState(() {
-                    Global().GameMan.RestoreTurn(Global().GameMan.turn + 1);
+                    Global().GameMan.restoreTurn(Global().GameMan.turn + 1);
                   });
                 },
                 child: const Text('Redo Turn'),
@@ -148,9 +144,12 @@ class _MainPageState extends State<MainPage> {
                     },
                   )
                 : Center(
-                    child: Global().GameMan.turn_active
-                        ? Text('Select a character to view actions')
-                        : Text('Start your Turn'),
+                    child: Text(
+                        Global().GameMan.turn_active
+                            ? 'Player ${Global().GameMan.currentPlayer()}: Select a Character'
+                            : 'Start next Turn',
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 28)),
                   ),
           ),
 
