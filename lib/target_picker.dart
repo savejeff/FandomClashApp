@@ -19,7 +19,7 @@ Future<Character?> showTargetPickerDialog(
                 .where((character) => character != attacker && character.isAlive)
                 .map((Character character) {
               return ListTile(
-                title: Text(character.name),
+                title: Text("${character.name} (${character.player})"),
                 subtitle: Text('HP: ${character.HP}/${character.maxHP}'),
                 onTap: () {
                   Navigator.of(context).pop(character);

@@ -21,90 +21,98 @@ class CharacterStatsWidget extends StatelessWidget {
       child: Card(
         color: isSelected ? Colors.lightBlueAccent : Colors.white,
         // Highlight the card if selected
-        margin: const EdgeInsets.all(8.0),
+        margin: const EdgeInsets.all(4.0),
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
+          padding: const EdgeInsets.all(4.0),
+          child: Row(
             children: [
-              Text(
-                'Name: ${character.name}',
-                style:
-                const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              Expanded(
+                flex: 3,
+                child: Column(children: [
+                  Text(
+                    '${character.name}',
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
+                  Text('Player: ${character.player}'),
+                  Text('Role: ${character.role ?? 'N/A'}'),
+                  Text('Fandom: ${character.fandomTrait ?? 'N/A'}'),
+                ]),
               ),
-              Text('Player: ${character.player}'),
-              Text(
-                  'Role: ${character.role ?? 'N/A'} | Fandom: ${character
-                      .fandomTrait ?? 'N/A'}'),
-              Text(''),
-              /*Text(
+              Expanded(
+                flex: 2,
+                child: Column(children: [
+                  /*Text(
                 'P: ${character.P} A: ${character.A} W: ${character.W}',
                 style:
                     const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),*/
-              Text.rich(
-                TextSpan(
-                  children: [
+                  Text.rich(
                     TextSpan(
-                      text: 'P: ',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      children: [
+                        TextSpan(
+                          text: 'P: ',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        TextSpan(
+                          text: '${character.P}   ',
+                          style: TextStyle(fontWeight: FontWeight.normal),
+                        ),
+                        TextSpan(
+                          text: 'A: ',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        TextSpan(
+                          text: '${character.A}   ',
+                          style: TextStyle(fontWeight: FontWeight.normal),
+                        ),
+                        TextSpan(
+                          text: 'W: ',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        TextSpan(
+                          text: '${character.W}',
+                          style: TextStyle(fontWeight: FontWeight.normal),
+                        ),
+                      ],
                     ),
+                    style: TextStyle(fontSize: 16),
+                  ),
+
+                  Text(''),
+                  //Text('HP: ${character.HP}/${character.maxHP} | AP: ${character.AP} | MR: ${character.MR}'),
+
+                  Text.rich(
                     TextSpan(
-                      text: '${character.P}   ',
-                      style: TextStyle(fontWeight: FontWeight.normal),
+                      children: [
+                        TextSpan(
+                          text: 'HP: ',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        TextSpan(
+                          text: '${character.HP}/${character.maxHP} | ',
+                        ),
+                        TextSpan(
+                          text: 'AP: ',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        TextSpan(
+                          text: '${character.AP} | ',
+                        ),
+                        TextSpan(
+                          text: 'MR: ',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        TextSpan(
+                          text: '${character.MR}',
+                        ),
+                      ],
                     ),
-                    TextSpan(
-                      text: 'A: ',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    TextSpan(
-                      text: '${character.A}   ',
-                      style: TextStyle(fontWeight: FontWeight.normal),
-                    ),
-                    TextSpan(
-                      text: 'W: ',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    TextSpan(
-                      text: '${character.W}',
-                      style: TextStyle(fontWeight: FontWeight.normal),
-                    ),
-                  ],
-                ),
-                style: TextStyle(fontSize: 16),
+                  ),
+                  Text(""),
+                  // Add more stats as needed
+                ]),
               ),
-
-              Text(''),
-              //Text('HP: ${character.HP}/${character.maxHP} | AP: ${character.AP} | MR: ${character.MR}'),
-
-              Text.rich(
-                TextSpan(
-                  children: [
-                    TextSpan(
-                      text: 'HP: ',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    TextSpan(
-                      text: '${character.HP}/${character.maxHP} | ',
-                    ),
-                    TextSpan(
-                      text: 'AP: ',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    TextSpan(
-                      text: '${character.AP} | ',
-                    ),
-                    TextSpan(
-                      text: 'MR: ',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    TextSpan(
-                      text: '${character.MR}',
-                    ),
-                  ],
-                ),
-              ),
-
-              // Add more stats as needed
             ],
           ),
         ),

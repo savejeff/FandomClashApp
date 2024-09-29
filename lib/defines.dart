@@ -11,6 +11,7 @@ const String ROLE_SUPPORT = "Support";
 const String TRAIT_ANIME = "Anime";
 const String TRAIT_SUPERHERO = "Superhero";
 const String TRAIT_FANTASY_CREATURE = "Fantasy Creature";
+const String TRAIT_ROBOT_MECH = "Robot Mech";
 
 const String ATTACK_TYPE_MELEE = "melee";
 const String ATTACK_TYPE_RANGED = "ranged";

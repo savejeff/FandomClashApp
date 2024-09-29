@@ -44,6 +44,10 @@ class GameManager extends ChangeNotifier {
     return _history_game_state.length;
   }
 
+  void Reset() {
+    // TODO implement
+  }
+
   //********************************* getter/setter ****************************
 
   // Getters and Setters to notify listeners on changes

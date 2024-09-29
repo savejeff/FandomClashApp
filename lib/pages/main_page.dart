@@ -69,7 +69,7 @@ class _MainPageState extends State<MainPage> {
       return;
     }
     // Logic to start the turn
-    print("Starting turn...");
+    Log("Main", "Starting turn...");
     // Set the turn_active to true or whatever your game logic requires
     Global().GameMan.startTurn();
     setState(() {}); // Trigger a UI update to reflect the new state
@@ -77,7 +77,7 @@ class _MainPageState extends State<MainPage> {
 
   void _finishTurn() {
     // Logic to finish the turn
-    print("Finishing turn...");
+    Log("Main", "Finishing turn...");
     // Set the turn_active to false or whatever your game logic requires
     Global().GameMan.finishTurn();
     setState(() {}); // Trigger a UI update to reflect the new state
@@ -157,8 +157,8 @@ class _MainPageState extends State<MainPage> {
                       });
                     },
                   )
-                : const Center(
-                    child: Text('Select a character to view actions'),
+                : Center(
+                    child: Global().GameMan.turn_active ? Text('Select a character to view actions') : Text('Start your Turn'),
                   ),
           ),
 
