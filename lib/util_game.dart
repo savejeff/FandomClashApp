@@ -6,34 +6,26 @@ final Random _random = Random();
 
 
 // Dice rolling functions
-int rollD6() {
+int roll_d6() {
   return _random.nextInt(6) + 1; // Returns a number between 1 and 6
 }
 
-int roll2D6() {
-  return rollD6() + rollD6();
+int roll_2d6() {
+  return roll_d6() + roll_d6();
 }
 
-int averageRoll2D6() {
-  return (roll2D6()) ~/ 2; // Integer division
+int average_roll_2d6() {
+  return (roll_2d6()) ~/ 2; // Integer division
 }
 
-int rollWithAdvantage() {
-  int roll1 = rollD6();
-  int roll2 = rollD6();
+int roll_with_advantage() {
+  int roll1 = roll_d6();
+  int roll2 = roll_d6();
   return max(roll1, roll2);
 }
 
-int rollWithDisadvantage() {
-  int roll1 = rollD6();
-  int roll2 = rollD6();
+int roll_with_disadvantage() {
+  int roll1 = roll_d6();
+  int roll2 = roll_d6();
   return min(roll1, roll2);
-}
-
-int averageRollWithAdvantage() {
-  return (rollWithAdvantage()) ~/ 2;
-}
-
-int averageRollWithDisadvantage() {
-  return (rollWithDisadvantage()) ~/ 2;
 }

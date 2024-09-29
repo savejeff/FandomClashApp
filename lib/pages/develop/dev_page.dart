@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 
-import '../../util.dart';
 import 'dev_base.dart';
 
-import '../../widgets/value_modifier_widget.dart';
+import 'package:fandom_clash/util.dart';
+import 'package:fandom_clash/models.dart';
+import 'package:fandom_clash/global.dart';
+import 'package:fandom_clash/defines.dart';
+
+import 'package:fandom_clash/widgets/value_modifier_widget.dart';
 
 
 class DevPage extends StatefulWidget {
@@ -97,25 +101,60 @@ class _DevPageState extends DevPageBaseState<DevPage> {
     }
   }
 
-  //************************** button callbacks*********************************
+  //************************** button callbacks *********************************
 
+
+  void onButton0_Click() {
+    LogX('Button 0 Pressed');
+
+  }
+
+  void onButton1_Click() {
+    LogX('Button 1 Pressed');
+
+  }
+
+  void onButton2_Click() {
+    LogX('Button 2 Pressed');
+
+  }
+
+  void onButton3_Click() {
+    LogX('Button 3 Pressed');
+
+  }
+
+  void onButton4_Click() {
+    LogX('Button 4 Pressed');
+
+  }
+
+  void onButton5_Click() {
+    LogX('Button 5 Pressed');
+
+  }
 
   void onButtonPressed(int index) {
     switch (index) {
       case 0:
-        LogX('Button 0 Pressed');
+        onButton0_Click();
         break;
       case 1:
-        LogX('Button 1 Pressed');
-        LogClear();
+        onButton1_Click();
         break;
-    // Add more cases for other buttons
-      default:
-        LogX('Button $index Pressed');
+      case 2:
+        onButton2_Click();
+        break;
+      case 3:
+        onButton3_Click();
+        break;
+      case 4:
+        onButton4_Click();
         break;
     }
     UpdateUI();
   }
+
 
   //******************************* body ***************************************
 

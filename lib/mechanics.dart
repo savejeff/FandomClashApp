@@ -9,61 +9,59 @@ import 'util_game.dart';
 
 import 'defines.dart';
 import "global.dart";
+import "settings.dart";
 
 
 /// Function to handle attacks
 String attack(
   Character attacker,
   Character defender, {
-  String attackType = ATTACK_TYPE_MELEE,
-  String defenderReaction = DEFENCE_TYPE_NONE,
+  String attack_type = ATTACK_TYPE_MELEE,
+  String defender_reaction = DEFENCE_TYPE_NONE,
 }) {
 
   // Determine attack and defense stats
-  int attackStat;
-  int baseDamage;
+  int attack_stat;
+  int base_damage;
 
-  if (attackType == ATTACK_TYPE_MELEE) {
-    attackStat = attacker.P + attacker.tempP;
-    baseDamage = attacker.P + attacker.tempP;
-  } else if (attackType == ATTACK_TYPE_RANGED) {
-    attackStat = attacker.W + attacker.tempW;
-    baseDamage = attacker.W + attacker.tempW;
+  if (attack_type == ATTACK_TYPE_MELEE) {
+    attack_stat = attacker.P + attacker.tempP;
+    base_damage = attacker.P + attacker.tempP;
+  } else if (attack_type == ATTACK_TYPE_RANGED) {
+    attack_stat = attacker.W + attacker.tempW;
+    base_damage = attacker.W + attacker.tempW;
   } else {
     return "Invalid attack type.";
   }
 
   // Attacker's roll
-  int attackRoll = averageRoll2D6() + attackStat;
+  int attack_roll = average_roll_2d6() + attack_stat;
 
   // Defender's roll and reaction
-  int defenseStat = defender.A + defender.tempA;
-  int defenseRoll;
+  int defense_stat = defender.A + defender.tempA;
+  int defense_roll;
 
-  if (defenderReaction == DEFENCE_TYPE_DODGE && defender.AP >= 1) {
+  if (defender_reaction == DEFENCE_TYPE_DODGE && defender.AP >= 1) {
     defender.AP -= 1;
-    defenseRoll = averageRollWithAdvantage() + defenseStat;
-  } else if (defenderReaction == DEFENCE_TYPE_BLOCK && defender.AP >= 1) {
+    defense_roll = roll_with_advantage() + defense_stat;
+  } else if (defender_reaction == DEFENCE_TYPE_BLOCK && defender.AP >= 1) {
     defender.AP -= 1;
-    defenseRoll = averageRoll2D6() + defender.P + defender.tempP;
+    defense_roll = average_roll_2d6() + defender.P + defender.tempP;
   } else {
-    defenseRoll = averageRoll2D6() + defenseStat;
+    defense_roll = average_roll_2d6() + defense_stat;
   }
 
   // Determine if the attack hits
-  if (attackRoll > defenseRoll) {
-    int damage = baseDamage + (attackRoll - defenseRoll);
+  if (attack_roll + ATTACK_ADVANTAGE_MODIFIER > defense_roll) {
+    int damage = base_damage + (attack_roll - defense_roll);
     defender.HP -= damage;
     if (defender.HP < 0) {
       defender.HP = 0;
     }
 
-    String msg = "${attacker.name} hits ${defender.name} for $damage damage. ${defender.name} has ${defender.HP} HP left.";
-
-    return msg;
+    return "${attacker.name} hits ${defender.name} for $damage damage. ${defender.name} has ${defender.HP} HP left.";
   } else {
-    String msg = "${attacker.name}'s attack misses ${defender.name}.";
-    return msg;
+    return "${attacker.name}'s attack misses ${defender.name}.";
   }
 }
 

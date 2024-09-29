@@ -1,7 +1,12 @@
+import 'package:fandom_clash/mechanics.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 
 import '../../util.dart';
+import 'package:fandom_clash/models.dart';
+import 'package:fandom_clash/global.dart';
+import 'package:fandom_clash/defines.dart';
+
 import 'dev_base.dart';
 
 import '../../widgets/value_modifier_widget.dart';
@@ -41,7 +46,6 @@ class _DevPageState extends DevPageBaseState<DevPage> {
 
   @override
   void dispose() {
-
     super.dispose();
   }
 
@@ -78,18 +82,16 @@ class _DevPageState extends DevPageBaseState<DevPage> {
       final StringBuffer txtOut = StringBuffer();
 
       await Future.delayed(Duration(milliseconds: 1), () {
-
         //**************************** build status txt ************************
 
         // Example: Add status and output texts
         txtStatus.write("Dev: 1\n");
-        txtStatus.write(format("Millis: %d\n", [millis()]));
 
         //**********************************************************************
 
 
         setState(() {
-         debugTxtStatus = txtStatus.toString();
+          debugTxtStatus = txtStatus.toString();
         });
 
         updateRunning = false;
@@ -97,21 +99,126 @@ class _DevPageState extends DevPageBaseState<DevPage> {
     }
   }
 
-  //************************** button callbacks*********************************
+  //************************** button callbacks *********************************
 
+
+  void onButton0_Click() {
+    LogX('Button 0 Pressed');
+
+
+    LogClear();
+
+    LogX("______ Characters __________");
+    for (Character char0 in Global().GameMan.characters) {
+      LogX("${char0.name}: P=${char0.P}, A=${char0.A}, W=${char0.W}");
+    }
+
+    LogX("_________ VS until Death _________________");
+
+    double total_avg_turns = 0;
+    double total_max_turns = 0;
+
+    for (Character char0 in Global().GameMan.characters) {
+      char0.HP = char0.maxHP; // reset character health
+
+      int matches = 0;
+      double avg_turns = 0;
+      int max_turns = 0;
+
+      for (Character char1 in Global().GameMan.characters) {
+        if (char0 == char1) {
+          continue;
+        }
+
+        double avg_turns_melee = 0;
+        double avg_turns_ranged = 0;
+
+        for(int i = 0; i < 10; i++) {
+          matches += 1;
+
+
+          char1.HP = char1.maxHP; // reset character health
+
+          int turns_melee = 0;
+          while (char1.isAlive) {
+            attack(char0, char1, attack_type: ATTACK_TYPE_MELEE);
+            turns_melee += 1;
+          }
+
+          char1.HP = char1.maxHP; // reset character health
+
+          int turns_ranged = 0;
+          while (char1.isAlive) {
+            attack(char0, char1, attack_type: ATTACK_TYPE_RANGED);
+            turns_ranged += 1;
+          }
+
+          avg_turns_melee += turns_melee;
+          avg_turns_ranged += turns_ranged;
+
+          avg_turns += MIN([turns_ranged, turns_melee]);
+          max_turns = MAX([max_turns, MIN([turns_ranged, turns_melee])]);
+        }
+        avg_turns_melee /= 10;
+        avg_turns_ranged /= 10;
+
+
+        LogX("${char0.name}->${char1
+            .name}: melee_turns=$avg_turns_melee, turns_ranged=$avg_turns_ranged");
+      }
+
+      avg_turns /= matches;
+
+      total_avg_turns += avg_turns;
+      total_max_turns += max_turns;
+
+      LogX(" >>> ${char0.name}: avg_turns=${avg_turns}, max_turns=${max_turns}");
+      LogX("");
+    }
+
+    total_avg_turns /= Global().GameMan.characters.length;
+    total_max_turns /= Global().GameMan.characters.length;
+
+    LogX("");
+    LogX(" >>> Total: avg_turns=${total_avg_turns}, max_turns=${total_max_turns}");
+  }
+
+  void onButton1_Click() {
+    LogX('Button 1 Pressed');
+  }
+
+  void onButton2_Click() {
+    LogX('Button 2 Pressed');
+  }
+
+  void onButton3_Click() {
+    LogX('Button 3 Pressed');
+  }
+
+  void onButton4_Click() {
+    LogX('Button 4 Pressed');
+  }
+
+  void onButton5_Click() {
+    LogX('Button 5 Pressed');
+  }
 
   void onButtonPressed(int index) {
     switch (index) {
       case 0:
-        LogX('Button 0 Pressed');
+        onButton0_Click();
         break;
       case 1:
-        LogX('Button 1 Pressed');
-        LogClear();
+        onButton1_Click();
         break;
-    // Add more cases for other buttons
-      default:
-        LogX('Button $index Pressed');
+      case 2:
+        onButton2_Click();
+        break;
+      case 3:
+        onButton3_Click();
+        break;
+      case 4:
+        onButton4_Click();
         break;
     }
     UpdateUI();
@@ -122,18 +229,12 @@ class _DevPageState extends DevPageBaseState<DevPage> {
 
   Widget _buildDevElements() {
     return
-    //************************* dev element here ***************************
-      IntegerModifierWidget(
-        label: "HP",
-        value: selectedValue,
-        onValueChanged: (value) {
-          setState(() {
-            selectedValue = value;
-          });
-        }, // Handle value changes
-      )
+      //************************* dev element here ***************************
+
+      Text("")
+
     //**********************************************************************
-    ;
+        ;
   }
 
   Widget _buildStatus() {
@@ -231,7 +332,6 @@ class _DevPageState extends DevPageBaseState<DevPage> {
       ],
     );
   }
-
 
 
 }

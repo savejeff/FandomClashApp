@@ -40,6 +40,9 @@ dependencies:
 
   json_annotation: ^4.9.0
 
+  share: ^2.0.4
+  # file_selector: ^1.0.3
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

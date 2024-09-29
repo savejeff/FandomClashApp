@@ -19,6 +19,7 @@ const String ATTACK_TYPE_RANGED = "ranged";
 const String DEFENCE_TYPE_NONE = "none";
 const String DEFENCE_TYPE_DODGE = "dodge";
 const String DEFENCE_TYPE_BLOCK = "block";
+const String DEFENCE_TYPE_COVERED = "covered"; // like standing behind an object or has taken cover actively
 
 //************** Development ******************
 

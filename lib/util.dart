@@ -83,3 +83,39 @@ T MAP_UNLIMITED<T extends num>(T value, T FROM_MIN, T FROM_MAX, T TO_LOW, T TO_H
 	return ((value - FROM_MIN) * (TO_HIGH - TO_LOW) / (FROM_MAX - FROM_MIN) + TO_LOW) as T;
 }
 
+
+T MAX<T extends num>(List<T> values) {
+  if (values.isEmpty) {
+    throw ArgumentError('The list cannot be empty');
+  }
+
+  // Start with the first value in the list as the max
+  T maxValue = values[0];
+
+  // Iterate over the list to find the maximum
+  for (T value in values) {
+    if (value > maxValue) {
+      maxValue = value;
+    }
+  }
+
+  return maxValue;
+}
+
+T MIN<T extends num>(List<T> values) {
+  if (values.isEmpty) {
+    throw ArgumentError('The list cannot be empty');
+  }
+
+  // Start with the first value in the list as the minimum
+  T minValue = values[0];
+
+  // Iterate over the list to find the minimum
+  for (T value in values) {
+    if (value < minValue) {
+      minValue = value;
+    }
+  }
+
+  return minValue;
+}

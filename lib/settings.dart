@@ -1,0 +1,3 @@
+
+
+const int ATTACK_ADVANTAGE_MODIFIER = 2;
