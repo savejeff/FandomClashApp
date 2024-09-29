@@ -1,10 +1,11 @@
-import 'dart:convert';
+import 'package:flutter/material.dart';
 
 import 'package:fandom_clash/content_builtin.dart';
 import 'package:fandom_clash/modules/game_state.dart';
-import 'package:flutter/material.dart';
-import 'package:json_annotation/json_annotation.dart';
 
+import 'dart:convert';
+
+import 'package:json_annotation/json_annotation.dart';
 
 import '../models.dart';
 import '../target_picker.dart';
@@ -13,14 +14,12 @@ import '../global.dart';
 
 import '../widgets/character_list_widget.dart';
 
-import 'develop/dev_page.dart';
-
 //import 'develop/dev_page_basics_stateful_widget.dart';
 //import 'develop/dev_page_fragment.dart';
 //import 'develop/dev_page_widget_state_inheritance.dart';
 
 import '../widgets/character_interaction_interface_widget.dart';
-
+import '../widgets/develop_overview.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -65,51 +64,6 @@ class _MainPageState extends State<MainPage> {
 
   /****************************************************************************/
 
-  // FloatingActionButton callback
-  void _onClick_Develop() {
-    if (true) {
-      // Convert to JSON string
-      //final jsonString = jsonEncode(effect_healing_2hp.toJson());
-      final jsonString = Global().GameMan.State_Backup();
-      Log("Main", 'Encoded JSON: $jsonString');
-      
-      final Map<String, dynamic> jsonMap = jsonDecode(jsonString);
-      final GameState game_state_new = GameState.fromJson(jsonMap);
-      Log("Main", "New State Character Count: %d", [game_state_new.characters.length]);
-      setState(() {});
-    }
-
-    if (false) {
-      setState(() {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => DevPage()));
-      });
-    }
-
-    if (false) {
-      Character char_new = Character(
-        name: 'Warrior',
-        player: 'Player 1',
-        P: 7,
-        A: 4,
-        W: 4,
-        maxHP: 17,
-        HP: 17,
-        AP: 9,
-        MR: 3,
-        abilities: [],
-        items: [],
-        size: 'Large',
-        fandomTrait: 'Superhero',
-        role: 'Warrior',
-      );
-
-      setState(() {
-        Global().GameMan.addCharacter(char_new);
-      });
-    }
-  }
-
   void _startTurn() {
     if (Global().GameMan.turn_active) {
       return;
@@ -139,16 +93,39 @@ class _MainPageState extends State<MainPage> {
           children: [
             Text(widget.title),
             Expanded(flex: 1, child: Text("")),
-            Text("Turn ${Global().GameMan.turn} "),
-            if (BuildConfig.ENABLE_DEVELOP) ...[
+            if (!Global().GameMan.turn_active && Global().GameMan.turn > 0) ...[
               ElevatedButton(
                 onPressed: () {
-                  _onClick_Develop();
+                  setState(() {
+                    Global().GameMan.RestoreTurn(Global().GameMan.turn - 1);
+                  });
                 },
-                child: const Text('Develop'),
+                child: const Text('Revert Turn'),
               ),
             ],
-            Text("   ") // Some Padding
+            SizedBox(width: 10), // add some padding between buttons
+            Text("Turn ${Global().GameMan.turn} "),
+            SizedBox(width: 10), // add some padding between buttons
+            if (!Global().GameMan.turn_active && Global().GameMan.turn < Global().GameMan.BackUpCount()) ...[
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    Global().GameMan.RestoreTurn(Global().GameMan.turn + 1);
+                  });
+                },
+                child: const Text('Redo Turn'),
+              ),
+            ],
+            if (BuildConfig.ENABLE_DEVELOP) ...[
+              /*
+              ElevatedButton(
+                onPressed: () {
+                  //_onClick_Develop();
+                },
+                child: const Text('Develop'),
+              ),*/
+            ],
+            SizedBox(width: 25), // add some padding between buttons
           ],
         ),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -171,7 +148,7 @@ class _MainPageState extends State<MainPage> {
           // Right Side: CharacterInteractionInterfaceWidget
           Expanded(
             flex: 2,
-            child: Global().GameMan.character_selected != null
+            child: Global().GameMan.character_selected != null && Global().GameMan.turn_active
                 ? CharacterInteractionInterfaceWidget(
                     character: Global().GameMan.character_selected!,
                     onUpdate: () {
@@ -185,14 +162,18 @@ class _MainPageState extends State<MainPage> {
                   ),
           ),
 
-          // Right Side: CharacterInteractionInterfaceWidget
-          Expanded(
-            flex: 1,
-            child: Text(Global().SysLog)
-          ),
+          if (BuildConfig.ENABLE_DEVELOP) ...[
+            // Right Side: CharacterInteractionInterfaceWidget
+            Expanded(
+                flex: 1,
+                child: DevelopOverview(
+                  onValueChanged: (dummy) {
+                    setState(() {});
+                  },
+                )),
+          ],
         ],
       ),
-
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           if (Global().GameMan.turn_active) {

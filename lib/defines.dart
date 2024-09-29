@@ -12,6 +12,13 @@ const String TRAIT_ANIME = "Anime";
 const String TRAIT_SUPERHERO = "Superhero";
 const String TRAIT_FANTASY_CREATURE = "Fantasy Creature";
 
+const String ATTACK_TYPE_MELEE = "melee";
+const String ATTACK_TYPE_RANGED = "ranged";
+
+const String DEFENCE_TYPE_NONE = "none";
+const String DEFENCE_TYPE_DODGE = "dodge";
+const String DEFENCE_TYPE_BLOCK = "block";
+
 //************** Development ******************
 
 

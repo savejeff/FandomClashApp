@@ -3,24 +3,29 @@ import 'dart:ffi';
 
 import 'models.dart';
 import 'util.dart';
-import 'dart:math';
+import 'util_game.dart';
+
+
+
+import 'defines.dart';
+
 
 
 /// Function to handle attacks
 String attack(
-    Character attacker,
-    Character defender, {
-      String attackType = 'melee',
-      String? defenderReaction,
-    }) {
+  Character attacker,
+  Character defender, {
+  String attackType = ATTACK_TYPE_MELEE,
+  String defenderReaction = DEFENCE_TYPE_NONE,
+}) {
   // Determine attack and defense stats
   int attackStat;
   int baseDamage;
 
-  if (attackType == 'melee') {
+  if (attackType == ATTACK_TYPE_MELEE) {
     attackStat = attacker.P + attacker.tempP;
     baseDamage = attacker.P + attacker.tempP;
-  } else if (attackType == 'ranged') {
+  } else if (attackType == ATTACK_TYPE_RANGED) {
     attackStat = attacker.W + attacker.tempW;
     baseDamage = attacker.W + attacker.tempW;
   } else {
@@ -34,10 +39,10 @@ String attack(
   int defenseStat = defender.A + defender.tempA;
   int defenseRoll;
 
-  if (defenderReaction == 'dodge' && defender.AP >= 1) {
+  if (defenderReaction == DEFENCE_TYPE_DODGE && defender.AP >= 1) {
     defender.AP -= 1;
     defenseRoll = averageRollWithAdvantage() + defenseStat;
-  } else if (defenderReaction == 'block' && defender.AP >= 1) {
+  } else if (defenderReaction == DEFENCE_TYPE_BLOCK && defender.AP >= 1) {
     defender.AP -= 1;
     defenseRoll = averageRoll2D6() + defender.P + defender.tempP;
   } else {
@@ -57,11 +62,10 @@ String attack(
   }
 }
 
-
 /// Applies a Effect and returns description modification / effect applied as string
 String applyEffect(Effect effect, Character user, Character? target) {
   String effect_str = "";
-  if(effect.modifier_user_hp != null) {
+  if (effect.modifier_user_hp != null) {
     user.HP = LIMIT(0, user.HP + effect.modifier_user_hp!, user.maxHP);
     effect_str += "User added ${effect.modifier_user_hp} HP";
   }
@@ -69,15 +73,12 @@ String applyEffect(Effect effect, Character user, Character? target) {
   return effect_str;
 }
 
-
 /// Function to use an ability
 String useAbility(
-    Character user,
-    Ability ability,
-    {
-      Character? target,
-    }
-) {
+  Character user,
+  Ability ability, {
+  Character? target,
+}) {
   if (user.AP >= ability.cost) {
     user.AP -= ability.cost;
     // Apply the ability's effect
@@ -102,10 +103,10 @@ String useItem(Character character, Item item) {
   if (character.items.contains(item)) {
     if (item.effect != null) {
       String result = applyEffect(item.effect!, character, null);
-      if(item.uses > 0) {
+      if (item.uses > 0) {
         item.uses -= 1;
 
-        if(item.uses == 0)
+        if (item.uses == 0)
           character.items.remove(item); // Remove consumable items after use
       }
 
@@ -119,10 +120,10 @@ String useItem(Character character, Item item) {
 }
 
 
+
+
+
 //*********************** deprecated *******************
-
-
-
 
 /// Example ability effect functions
 String healAbility(Character user, Character? target) {
@@ -136,7 +137,6 @@ String healAbility(Character user, Character? target) {
   }
   return "${user.name} heals ${target.name} for $healAmount HP.";
 }
-
 
 String fireballAbility(Character user, List<Character> targets) {
   int damage = user.W + 2; // Damage as per the ability

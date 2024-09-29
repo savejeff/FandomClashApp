@@ -3,43 +3,7 @@ import 'dart:math';
 import 'package:sprintf/sprintf.dart';
 
 
-// Random number generator
-final Random _random = Random();
-
-// Dice rolling functions
-int rollD6() {
-  return _random.nextInt(6) + 1; // Returns a number between 1 and 6
-}
-
-int roll2D6() {
-  return rollD6() + rollD6();
-}
-
-int averageRoll2D6() {
-  return (roll2D6()) ~/ 2; // Integer division
-}
-
-int rollWithAdvantage() {
-  int roll1 = rollD6();
-  int roll2 = rollD6();
-  return max(roll1, roll2);
-}
-
-int rollWithDisadvantage() {
-  int roll1 = rollD6();
-  int roll2 = rollD6();
-  return min(roll1, roll2);
-}
-
-int averageRollWithAdvantage() {
-  return (rollWithAdvantage()) ~/ 2;
-}
-
-int averageRollWithDisadvantage() {
-  return (rollWithDisadvantage()) ~/ 2;
-}
-
-
+//******************************************************************************************
 
 int _millis0 = millis_epoch();
 
@@ -51,6 +15,9 @@ int millis() {
 int millis_epoch() {
   return DateTime.now().millisecondsSinceEpoch;
 }
+
+
+//******************************************************************************************
 
 String format(String format, [List<Object>? args]) {
   String msg = format;
@@ -65,6 +32,8 @@ String format(String format, [List<Object>? args]) {
   return msg;
 }
 
+
+//******************************************************************************************
 
 class ExecuterEvery {
   int executeDt; // [ms] period of execution
@@ -85,7 +54,7 @@ class ExecuterEvery {
   }
 }
 
-
+//******************************************************************************************
 
 
 // LIMIT function using generic num type
@@ -103,3 +72,4 @@ T MAP<T extends num>(T value, T FROM_MIN, T FROM_MAX, T TO_LOW, T TO_HIGH) {
 T MAP_UNLIMITED<T extends num>(T value, T FROM_MIN, T FROM_MAX, T TO_LOW, T TO_HIGH) {
 	return ((value - FROM_MIN) * (TO_HIGH - TO_LOW) / (FROM_MAX - FROM_MIN) + TO_LOW) as T;
 }
+

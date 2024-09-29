@@ -6,8 +6,6 @@ import '../defines.dart';
 import 'game_state.dart';
 
 class GameManager extends ChangeNotifier {
-
-
   GameState game_state = GameState(
       turn: 0,
       turn_active: false,
@@ -19,6 +17,31 @@ class GameManager extends ChangeNotifier {
 
   String State_Backup() {
     return game_state.Stringify();
+  }
+
+  void State_Restore(String game_state_str) {
+    game_state = GameState.fromJsonString(game_state_str);
+  }
+
+  Map<int, String> _history_game_state = {};
+
+  // Add a new backup to the map
+  void BackupState() {
+    _history_game_state[game_state.turn] = game_state.Stringify();
+  }
+
+  bool RestoreTurn(int turn) {
+    if (_history_game_state.containsKey(turn)) {
+      String game_state_str = _history_game_state[turn]!;
+      game_state = GameState.fromJsonString(game_state_str);
+      notifyListeners(); // Notify UI to update
+      return true;
+    }
+    return false;
+  }
+
+  int BackUpCount() {
+    return _history_game_state.length;
   }
 
   //********************************* getter/setter ****************************
@@ -90,7 +113,11 @@ class GameManager extends ChangeNotifier {
       return false;
     }
 
+    // finish turn
     turn_active = false;
+
+    // backup for history
+    BackupState();
 
     return true;
   }
