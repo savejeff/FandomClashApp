@@ -1,3 +1,4 @@
+import 'package:fandom_clash/global.dart';
 import 'package:flutter/material.dart';
 import '../models.dart';
 
@@ -16,10 +17,20 @@ class CharacterStatsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    Color bg_color = Global().GameMan.turn_active && Global().GameMan.currentPlayer() == character.player ? Colors.white : Colors.grey;
+    if(isSelected) {
+      bg_color = Colors.lightBlueAccent;
+    }
+    //Color bg_color = Colors.white;
+    if(!character.isAlive) {
+      bg_color = Colors.redAccent;
+    }
+
     return GestureDetector(
       onTap: onTap,
       child: Card(
-        color: isSelected ? Colors.lightBlueAccent : Colors.white,
+        color: bg_color,
         // Highlight the card if selected
         margin: const EdgeInsets.all(4.0),
         child: Padding(

@@ -1,3 +1,4 @@
+import 'package:fandom_clash/defines.dart';
 import 'package:flutter/material.dart';
 import '../models.dart';
 import '../mechanics.dart';
@@ -20,17 +21,25 @@ class ActionInterface extends StatelessWidget {
 
   //*********************************************************************************
 
-  void _onClick_Attack(BuildContext context) async {
+  void _onClick_Attack(BuildContext context, String type) async {
+    if(!character.isAlive) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Dead Characters can't Attack")),
+      );
+      return;
+    }
+
     // Show the target picker dialog
     Character? target = await showTargetPickerDialog(
       context,
       character, // The attacker
-      Global().GameMan.characters // Targets
+      Global().GameMan.characters, // Targets
+      Global().GameMan.currentPlayer()
     );
 
     if (target != null) {
       // Proceed with the attack logic
-      String result = attack(character, target);
+      String result = attack(character, target, attackType: type);
       onUpdate(); // Update the UI
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(result)),
@@ -51,6 +60,12 @@ class ActionInterface extends StatelessWidget {
   }
 
   void _onClick_UseAbility(BuildContext context, Ability ability, Character user, Character? target) async {
+    if(!character.isAlive) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Dead Characters can't use Abilities")),
+      );
+      return;
+    }
 
 
     String result_str = useAbility(user, ability);
@@ -90,21 +105,21 @@ class ActionInterface extends StatelessWidget {
                   // Add horizontal padding between buttons
                   child: ElevatedButton(
                     onPressed: () async {
-                      _onClick_Attack(context);
+                      _onClick_Attack(context, ATTACK_TYPE_MELEE);
                     },
-                    child: const Text('Attack'),
+                    child: const Text('Attack Melee'),
                   ),
                 ),
-                /*Padding(
+                Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   // Add horizontal padding between buttons
                   child: ElevatedButton(
-                    onPressed: () {
-                      _onClick_UseAbility(context);
+                    onPressed: () async {
+                      _onClick_Attack(context, ATTACK_TYPE_RANGED);
                     },
-                    child: const Text('Use Ability'),
+                    child: const Text('Attack Ranged'),
                   ),
-                ),*/
+                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   // Add horizontal padding between buttons

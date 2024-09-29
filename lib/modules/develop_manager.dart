@@ -8,7 +8,7 @@ import '../content_builtin.dart';
 
 
 class DevelopManager {
-  void createDummyContent() {
+  void onGameSetup() {
     Global().GameMan.players = [
       PLAYER_DEV_1,
       PLAYER_DEV_2
@@ -81,13 +81,20 @@ class DevelopManager {
 
     if (true) {
 
-      const String PLAYER_1 = "Player 1";
-      const String PLAYER_2 = "Player 2";
+      const String PLAYER_1 = "Jan Left";
+      const String PLAYER_2 = "Jan Right";
+
+      Global().GameMan.starting_player = PLAYER_1;
+      Global().GameMan.players = [
+        PLAYER_1,
+        PLAYER_2
+      ];
+
 
       // Create dummy characters and add them to CharacterManager
       Global().GameMan.addCharacter(
         Character(
-          name: 'Ranger',
+          name: 'Rem',
           player: PLAYER_1,
           P: 3,
           A: 5,
@@ -109,7 +116,7 @@ class DevelopManager {
 
       Global().GameMan.addCharacter(
         Character(
-          name: 'Scout',
+          name: 'Milim Nava',
           player: PLAYER_1,
           P: 6,
           A: 6,
@@ -131,7 +138,7 @@ class DevelopManager {
 
       Global().GameMan.addCharacter(
         Character(
-          name: 'Support',
+          name: 'Anya Forger',
           player: PLAYER_1,
           P: 5,
           A: 6,
@@ -156,7 +163,7 @@ class DevelopManager {
       // Create dummy characters and add them to CharacterManager
       Global().GameMan.addCharacter(
         Character(
-          name: 'Scout',
+          name: 'Utaha Kasumigaoka',
           player: PLAYER_2,
           P: 6,
           A: 3,
@@ -178,7 +185,7 @@ class DevelopManager {
 
       Global().GameMan.addCharacter(
         Character(
-          name: 'Warrior',
+          name: 'Beatrice',
           player: PLAYER_2,
           P: 7,
           A: 5,
@@ -200,7 +207,7 @@ class DevelopManager {
 
       Global().GameMan.addCharacter(
         Character(
-          name: 'Support',
+          name: 'Christine',
           player: PLAYER_2,
           P: 6,
           A: 6,

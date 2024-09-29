@@ -11,6 +11,17 @@ import '../modules/game_state.dart';
 
 import '../pages/develop/dev_page.dart';
 
+String reverseLines(String input) {
+  // Split the input string by newline characters
+  List<String> lines = input.split('\n');
+
+  // Reverse the order of the lines
+  List<String> reversedLines = lines.reversed.toList();
+
+  // Join the reversed lines back into a single string
+  return reversedLines.join('\n');
+}
+
 class DevelopOverview extends StatelessWidget {
   final void Function(int) onValueChanged;
 
@@ -21,11 +32,10 @@ class DevelopOverview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String _statusText = 'Status: \nBackUpCount: ${Global().GameMan.BackUpCount()}'
-    + 'BackUpCount: ${Global().GameMan.BackUpCount()}\n'
-    + "Current Turn ${Global().GameMan.turn}\n"
-    + "Turn Active: ${Global().GameMan.turn_active}\n"
-    ;
+    String _statusText = '' +
+        'BackUpCount: ${Global().GameMan.BackUpCount()}\n' +
+        "Current Turn: ${Global().GameMan.turn}\n" +
+        "Turn Active: ${Global().GameMan.turn_active}\n";
 
     void _onClick_DevPage() {
       Navigator.push(
@@ -114,11 +124,15 @@ class DevelopOverview extends StatelessWidget {
           Text("Status: ",
               style:
                   const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-          Text(_statusText),
-          //Text("Current Turn ${Global().GameMan.turn}"),
-          //Text("Turn Active: ${Global().GameMan.turn_active}"),
+          Align(
+              alignment: Alignment.topLeft, // left-align the text
+              child: Text(
+                _statusText,
+                style: TextStyle(fontFamily: 'RobotoMono', fontSize: 12),
+              )),
 
-          SizedBox(height: 10), // add some padding between buttons
+
+          //SizedBox(height: 10), // add some padding between buttons
 
           Text("Log: ",
               style:
@@ -126,11 +140,10 @@ class DevelopOverview extends StatelessWidget {
           Align(
             alignment: Alignment.topLeft, // left-align the text
             child: Text(
-              Global().SysLog,
+              reverseLines(Global().SysLog),
               style: TextStyle(fontFamily: 'RobotoMono', fontSize: 10),
             ),
           ),
-
         ],
       ),
     );

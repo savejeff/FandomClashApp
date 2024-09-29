@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import '../defines.dart';
 
 import 'game_state.dart';
+import 'package:fandom_clash/global.dart';
+
 
 class GameManager extends ChangeNotifier {
   GameState game_state = GameState(
@@ -12,6 +14,8 @@ class GameManager extends ChangeNotifier {
       characters: [],
       players: [],
       character_selected: null);
+
+  String? starting_player = null;
 
   //****************************** State Backup ********************************
 
@@ -46,6 +50,10 @@ class GameManager extends ChangeNotifier {
 
   void Reset() {
     // TODO implement
+    game_state = GameState(turn: 0, turn_active: false, players: [], characters: []);
+    if(BuildConfig.ENABLE_DEVELOP) {
+      Global().developManager.onGameSetup();
+    }
   }
 
   //********************************* getter/setter ****************************
@@ -100,12 +108,23 @@ class GameManager extends ChangeNotifier {
     character_selected = character;
   }
 
+  String currentPlayer() {
+    if(turn == 0) {
+      return "";
+    }
+    // TODO add offset via starting player
+    int start_player = starting_player != null ? players.indexOf(starting_player!) : 0;
+    return players[(turn + 1 - start_player) % players.length];
+  }
+
   //**************************** Turn ****************************
 
   bool startTurn() {
     if (turn_active) {
       return false;
     }
+    Log("GameMan", "Starting turn ${game_state.turn + 1}...");
+
     turn += 1;
     turn_active = true;
 
@@ -116,6 +135,7 @@ class GameManager extends ChangeNotifier {
     if (!turn_active) {
       return false;
     }
+    Log("GameMan", "Finishing turn ${game_state.turn}...");
 
     // finish turn
     turn_active = false;

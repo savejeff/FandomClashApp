@@ -42,7 +42,7 @@ class Global {
   // begin() method to start processes like loading game state
   void begin() {
     // For development, create dummy content
-    developManager.createDummyContent();
+    developManager.onGameSetup();
   }
 
 
@@ -55,7 +55,7 @@ class Global {
   void Log(String tag, String sformat, [List<Object>? args]) {
     String msg = args == null ? sformat : format(sformat, args);
 
-    String log_line = "[+${millis()}] $msg";
+    String log_line = "[$tag] $msg";
 
     _sys_log += "$log_line\n";
 

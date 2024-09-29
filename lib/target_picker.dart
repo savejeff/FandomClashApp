@@ -4,10 +4,8 @@ import 'models.dart';
 import 'global.dart'; // Import GameManager
 
 // Function to show the target picker dialog
-Future<Character?> showTargetPickerDialog(
-    BuildContext context, Character attacker, List<Character> characters
-    ) async {
-
+Future<Character?> showTargetPickerDialog(BuildContext context,
+    Character attacker, List<Character> characters, String player) async {
   return showDialog<Character>(
     context: context,
     builder: (BuildContext context) {
@@ -16,14 +14,23 @@ Future<Character?> showTargetPickerDialog(
         content: SingleChildScrollView(
           child: ListBody(
             children: characters
-                .where((character) => character != attacker && character.isAlive)
+                .where(
+                    (character) => character != attacker && character.isAlive)
                 .map((Character character) {
-              return ListTile(
-                title: Text("${character.name} (${character.player})"),
-                subtitle: Text('HP: ${character.HP}/${character.maxHP}'),
-                onTap: () {
-                  Navigator.of(context).pop(character);
-                },
+              // Condition to determine if the item should have a colored background
+              Color? bg_color = player == character.player
+                  ? Colors.grey
+                  : null; // Example condition
+
+              return Container(
+                color: bg_color,
+                child: ListTile(
+                  title: Text("${character.name} (${character.player})"),
+                  subtitle: Text('HP: ${character.HP}/${character.maxHP}'),
+                  onTap: () {
+                    Navigator.of(context).pop(character);
+                  },
+                ),
               );
             }).toList(),
           ),
