@@ -11,7 +11,8 @@ import '../modules/game_state.dart';
 
 
 //import '../pages/develop/dev_page.dart';
-import '../pages/develop/dev_attack_analysis_page.dart';
+//import '../pages/develop/dev_attack_analysis_page.dart';
+import '../pages/develop/dev_page_attack_dialog.dart';
 
 
 
