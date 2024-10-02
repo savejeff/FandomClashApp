@@ -21,6 +21,12 @@ const String DEFENCE_TYPE_DODGE = "dodge";
 const String DEFENCE_TYPE_BLOCK = "block";
 const String DEFENCE_TYPE_COVERED = "covered"; // like standing behind an object or has taken cover actively
 
+
+const ROLL_TYPE_1D6 = "1d6";
+const ROLL_TYPE_AVG_2D6 = "avg_2d6";
+const ROLL_TYPE_MAX_2D6 = "max_2d6";
+const ROLL_TYPE_MIN_2D6 = "min_2d6";
+
 //************** Development ******************
 
 

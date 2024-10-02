@@ -22,14 +22,11 @@ String attack(
 
   // Determine attack and defense stats
   int attack_stat;
-  int base_damage;
 
   if (attack_type == ATTACK_TYPE_MELEE) {
     attack_stat = attacker.P + attacker.tempP;
-    base_damage = attacker.P + attacker.tempP;
   } else if (attack_type == ATTACK_TYPE_RANGED) {
     attack_stat = attacker.W + attacker.tempW;
-    base_damage = attacker.W + attacker.tempW;
   } else {
     return "Invalid attack type.";
   }
@@ -53,7 +50,9 @@ String attack(
 
   // Determine if the attack hits
   if (attack_roll + ATTACK_ADVANTAGE_MODIFIER > defense_roll) {
-    int damage = base_damage + (attack_roll - defense_roll);
+
+    // damage = attack stat + overflow from attack vs defense
+    int damage = attack_stat + (attack_roll - defense_roll);
     defender.HP -= damage;
     if (defender.HP < 0) {
       defender.HP = 0;

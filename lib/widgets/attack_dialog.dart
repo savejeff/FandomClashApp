@@ -15,12 +15,16 @@ import 'dice_roll_widget.dart'; // Import the DiceRollWidget
 
 // attack_result.dart
 class AttackResult {
-  final bool hit;
-  final int damage;
-  final int remainingHP;
-  final String message;
+  int attacker_roll;
+  int defender_roll;
+  bool hit;
+  int damage;
+  int remainingHP;
+  String message;
 
   AttackResult({
+    required this.attacker_roll,
+    required this.defender_roll,
     required this.hit,
     required this.damage,
     required this.remainingHP,
@@ -28,85 +32,111 @@ class AttackResult {
   });
 }
 
-
 AttackResult attack(
-    Character attacker,
-    Character defender, {
-      String attackType = 'melee',
-      String? defenderReaction,
-      int? attackerDiceOverride,
-      int? defenderDiceOverride,
-    }) {
-  // Determine attack and defense stats
-  int attackStat;
-  int baseDamage;
+  Character attacker,
+  Character defender, {
+  String attackType = ATTACK_TYPE_MELEE,
+  String defenderReaction = DEFENCE_TYPE_NONE,
+  String? attackRollOverride,
+  String? defenseRollOverride,
+  int? attackerDiceOverride,
+  int? defenderDiceOverride,
+}) {
+  AttackResult result = AttackResult(
+    attacker_roll: 0,
+    defender_roll: 0,
+    hit: false,
+    damage: 0,
+    remainingHP: defender.HP,
+    message: "Invalid attack type.",
+  );
 
+  // Determine attack and roll
+  int attackStat;
+  String attackRoll = ROLL_TYPE_AVG_2D6;
+
+  // Defender's roll and roll
+  int defenseStat;
+  String defenseRoll = ROLL_TYPE_AVG_2D6;
+
+  // calculate attack stat
   if (attackType == ATTACK_TYPE_MELEE) {
     attackStat = attacker.P + attacker.tempP;
-    baseDamage = attacker.P + attacker.tempP;
   } else if (attackType == ATTACK_TYPE_RANGED) {
     attackStat = attacker.W + attacker.tempW;
-    baseDamage = attacker.W + attacker.tempW;
   } else {
-    return AttackResult(
-      hit: false,
-      damage: 0,
-      remainingHP: defender.HP,
-      message: "Invalid attack type.",
-    );
+    return result;
   }
 
-  // Attacker's roll
-  int attackRoll = (attackerDiceOverride ?? average_roll_2d6()) + attackStat;
+  // - - calculate defense stat - -
 
-  // Defender's roll and reaction
-  int defenseStat;
-  int defenseRoll;
-
+  // defense dodge (add advantage to defense)
   if (defenderReaction == DEFENCE_TYPE_DODGE && defender.AP >= 1) {
     defender.AP -= 1;
     defenseStat = defender.A + defender.tempA;
-    defenseRoll =
-        (defenderDiceOverride ?? roll_with_advantage()) + defenseStat;
-  } else if (defenderReaction == DEFENCE_TYPE_BLOCK && defender.AP >= 1) {
+    defenseRoll = ROLL_TYPE_MAX_2D6; // with advantage
+  }
+  // block (use P not A as defense stat
+  else if (defenderReaction == DEFENCE_TYPE_BLOCK && defender.AP >= 1) {
     defender.AP -= 1;
     defenseStat = defender.P + defender.tempP;
-    defenseRoll = (defenderDiceOverride ?? average_roll_2d6()) + defenseStat;
-  } else if (defenderReaction == DEFENCE_TYPE_COVERED) {
+    defenseRoll = ROLL_TYPE_AVG_2D6; // regular
+  }
+  // covered (adds +2 defense stat)
+  else if (defenderReaction == DEFENCE_TYPE_COVERED) {
     // Assuming 'Covered' adds a static bonus, e.g., +2 to defense
     defenseStat = defender.A + defender.tempA + 2; // Adjust as per game rules
-    defenseRoll = (defenderDiceOverride ?? average_roll_2d6()) + defenseStat;
-  } else {
+    defenseRoll = ROLL_TYPE_AVG_2D6; // regular
+  }
+  // regular defence ( A is defense stat with regular avg_2d6
+  else {
     defenseStat = defender.A + defender.tempA;
-    defenseRoll = (defenderDiceOverride ?? average_roll_2d6()) + defenseStat;
+    defenseRoll = ROLL_TYPE_AVG_2D6; // regular
   }
 
+  // apply override
+  if (attackRollOverride != null) {
+    attackRoll = attackRollOverride;
+  }
+  if (defenseRollOverride != null) {
+    defenseRoll = defenseRollOverride;
+  }
+
+  // actual roll
+  result.defender_roll = (defenderDiceOverride ?? roll_by_type(attackRoll));
+  result.attacker_roll = (attackerDiceOverride ?? roll_by_type(defenseRoll));
+
+  // calculate total for attack and defense
+  int attack_total = result.attacker_roll + attackStat;
+  int defense_total = result.defender_roll + defenseStat;
+
+
   // Determine if the attack hits
-  if (attackRoll > defenseRoll) {
-    int damage = baseDamage + (attackRoll - defenseRoll);
+  if (attack_total > defense_total) {
+
+    // damage = attack stat + overflow from attack vs defense
+    int damage = attackStat + (attack_total - defense_total);
+
+    // apply damage
     defender.HP -= damage;
     if (defender.HP < 0) {
       defender.HP = 0;
     }
-    String message =
-        "${attacker.name} hits ${defender.name} for $damage damage. ${defender.name} has ${defender.HP} HP left.";
-    return AttackResult(
-      hit: true,
-      damage: damage,
-      remainingHP: defender.HP,
-      message: message,
-    );
-  } else {
-    String message = "${attacker.name}'s attack misses ${defender.name}.";
-    return AttackResult(
-      hit: false,
-      damage: 0,
-      remainingHP: defender.HP,
-      message: message,
-    );
-  }
-}
 
+    result.hit = true;
+    result.damage = damage;
+    result.remainingHP = defender.HP;
+    result.message =
+        "${attacker.name} hits ${defender.name} for $damage damage. ${defender.name} has ${defender.HP} HP left.";
+  } else {
+    result.hit = false;
+    result.damage = 0;
+    result.remainingHP = defender.HP;
+    result.message = "${attacker.name}'s attack misses ${defender.name}.";
+  }
+
+  return result;
+}
 
 class AttackDialog extends StatefulWidget {
   final Character attacker;
@@ -381,7 +411,7 @@ class _AttackDialogState extends State<AttackDialog> {
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
                             color:
-                            attackResult!.hit ? Colors.green : Colors.red,
+                                attackResult!.hit ? Colors.green : Colors.red,
                           ),
                         ),
                         const SizedBox(height: 8),
