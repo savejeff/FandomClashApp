@@ -41,11 +41,11 @@ class ActionInterface extends StatelessWidget {
 
     if (target != null) {
       // Proceed with the attack logic
-      String result = attack(character, target, attack_type: type);
-      LogTurn(TAG, result);
+      AttackResult result = attack(character, target, attackType: type);
+      LogTurn(TAG, result.message);
       onUpdate(); // Update the UI
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(result)),
+        SnackBar(content: Text(result.message)),
       );
     } else {
       // Attack was canceled

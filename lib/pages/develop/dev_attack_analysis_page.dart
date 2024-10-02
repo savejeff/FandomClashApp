@@ -141,7 +141,7 @@ class _DevPageState extends DevPageBaseState<DevPage> {
 
           int turns_melee = 0;
           while (char1.isAlive) {
-            attack(char0, char1, attack_type: ATTACK_TYPE_MELEE);
+            attack(char0, char1, attackType: ATTACK_TYPE_MELEE);
             turns_melee += 1;
           }
 
@@ -149,7 +149,7 @@ class _DevPageState extends DevPageBaseState<DevPage> {
 
           int turns_ranged = 0;
           while (char1.isAlive) {
-            attack(char0, char1, attack_type: ATTACK_TYPE_RANGED);
+            attack(char0, char1, attackType: ATTACK_TYPE_RANGED);
             turns_ranged += 1;
           }
 
