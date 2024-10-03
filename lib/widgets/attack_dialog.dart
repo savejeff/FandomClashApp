@@ -14,10 +14,10 @@ import 'package:fandom_clash/settings.dart';
 import 'dice_roll_widget.dart'; // Import the DiceRollWidget
 
 
-
 class AttackDialog extends StatefulWidget {
   final Character attacker;
   final Character defender;
+  final String attackTypeInit;
   final VoidCallback onAttackComplete;
 
   const AttackDialog({
@@ -25,6 +25,7 @@ class AttackDialog extends StatefulWidget {
     required this.attacker,
     required this.defender,
     required this.onAttackComplete,
+    this.attackTypeInit = ATTACK_TYPE_MELEE,
   }) : super(key: key);
 
   @override
@@ -32,21 +33,20 @@ class AttackDialog extends StatefulWidget {
 }
 
 class _AttackDialogState extends State<AttackDialog> {
-  // Dice roll results
-  int attackerDiceResult = -1;
-  int defenderDiceResult = -1;
-
   // Dice rolling states
   bool attackerRolling = false;
   bool defenderRolling = false;
 
   // Flags to control UI state
-  bool diceRolled = false;
   bool attackExecuted = false;
 
   // Selected attack and defense types
   String selectedAttackType = ATTACK_TYPE_MELEE;
   String selectedDefenseType = DEFENCE_TYPE_NONE;
+
+  // Selected roll types
+  String selectedAttackRollType = "";
+  String selectedDefenseRollType = "";
 
   // Attack result
   AttackResult? attackResult;
@@ -54,51 +54,44 @@ class _AttackDialogState extends State<AttackDialog> {
   @override
   void initState() {
     super.initState();
-  }
 
-  // Function to perform the dice rolls and update the UI
-  void _rollDice() {
-    setState(() {
-      diceRolled = false;
-      attackExecuted = false;
-      attackResult = null;
-      attackerRolling = true;
-      defenderRolling = true;
-      attackerDiceResult = average_roll_2d6(); // Use your dice roll function
-      defenderDiceResult = average_roll_2d6();
-    });
-
-    // Simulate rolling for 2 seconds
-    Future.delayed(const Duration(seconds: 2), () {
-      setState(() {
-        attackerRolling = false;
-        defenderRolling = false;
-        diceRolled = true;
-      });
-    });
+    selectedAttackType = widget.attackTypeInit;
   }
 
   // Function to execute the attack
   void _executeAttack() {
-    if (!diceRolled) return;
-
-    // Use the attack function from mechanics.dart
-    AttackResult result = attack(
-      widget.attacker,
-      widget.defender,
-      attackType: selectedAttackType,
-      defenderReaction: selectedDefenseType,
-      attackerDiceOverride: attackerDiceResult,
-      defenderDiceOverride: defenderDiceResult,
-    );
+    if (attackExecuted) return;
 
     setState(() {
-      attackExecuted = true;
-      attackResult = result;
+      attackExecuted = false;
+      attackResult = null;
+      attackerRolling = true;
+      defenderRolling = true;
     });
 
-    // Callback to notify that the attack is complete
-    widget.onAttackComplete();
+    // Simulate rolling animations
+    Future.delayed(const Duration(seconds: 2), () {
+      // Perform the attack
+      AttackResult result = attack(
+        widget.attacker,
+        widget.defender,
+        attackType: selectedAttackType,
+        defenderReaction: selectedDefenseType,
+        attackRollOverride: selectedAttackRollType != "" ? selectedAttackRollType : null,
+        defenseRollOverride: selectedDefenseRollType != "" ? selectedDefenseRollType : null,
+        dry_run: true
+      );
+
+      setState(() {
+        attackerRolling = false;
+        defenderRolling = false;
+        attackExecuted = true;
+        attackResult = result;
+      });
+
+      // Callback to notify that the attack is complete
+      widget.onAttackComplete();
+    });
   }
 
   @override
@@ -191,6 +184,85 @@ class _AttackDialogState extends State<AttackDialog> {
                     ],
                   ),
                   const SizedBox(height: 16),
+                  // Roll Type Selectors
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // Attacker Roll Type Dropdown
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Attacker Roll Type:',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          DropdownButton<String>(
+                            value: selectedAttackRollType,
+                            items: [
+                              DropdownMenuItem(
+                                value: "",
+                                child: const Text('Regular Roll'),
+                              ),
+                              DropdownMenuItem(
+                                value: ROLL_TYPE_MAX_2D6,
+                                child: const Text('with Advantage'),
+                              ),
+                              DropdownMenuItem(
+                                value: ROLL_TYPE_MIN_2D6,
+                                child: const Text('with Disadvantage'),
+                              ),
+                              DropdownMenuItem(
+                                value: ROLL_TYPE_1D6,
+                                child: const Text('1d6'),
+                              ),
+                            ],
+                            onChanged: (value) {
+                              setState(() {
+                                selectedAttackRollType = value!;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                      // Defender Roll Type Dropdown
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Defender Roll Type:',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          DropdownButton<String>(
+                            value: selectedDefenseRollType,
+                            items: [
+                              DropdownMenuItem(
+                                value: "",
+                                child: const Text('Regular Roll'),
+                              ),
+                              DropdownMenuItem(
+                                value: ROLL_TYPE_MAX_2D6,
+                                child: const Text('with Advantage'),
+                              ),
+                              DropdownMenuItem(
+                                value: ROLL_TYPE_MIN_2D6,
+                                child: const Text('with Disadvantage'),
+                              ),
+                              DropdownMenuItem(
+                                value: ROLL_TYPE_1D6,
+                                child: const Text('1d6'),
+                              ),
+                            ],
+                            onChanged: (value) {
+                              setState(() {
+                                selectedDefenseRollType = value!;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
                   // Attack and Defense Stats and Dice Results
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -223,7 +295,7 @@ class _AttackDialogState extends State<AttackDialog> {
                               const SizedBox(width: 8),
                               // Dice visualization using DiceRollWidget
                               DiceRollWidget(
-                                finalValue: attackerDiceResult,
+                                finalValue: attackResult?.attacker_roll ?? -1,
                                 rolling: attackerRolling,
                               ),
                             ],
@@ -266,7 +338,7 @@ class _AttackDialogState extends State<AttackDialog> {
                               const SizedBox(width: 8),
                               // Dice visualization using DiceRollWidget
                               DiceRollWidget(
-                                finalValue: defenderDiceResult,
+                                finalValue: attackResult?.defender_roll ?? -1,
                                 rolling: defenderRolling,
                               ),
                             ],
@@ -288,7 +360,7 @@ class _AttackDialogState extends State<AttackDialog> {
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
                             color:
-                                attackResult!.hit ? Colors.green : Colors.red,
+                            attackResult!.hit ? Colors.green : Colors.red,
                           ),
                         ),
                         const SizedBox(height: 8),
@@ -304,17 +376,9 @@ class _AttackDialogState extends State<AttackDialog> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      // Roll Dice Button
-                      ElevatedButton(
-                        onPressed: diceRolled ? null : _rollDice,
-                        child: const Text('Roll Dice'),
-                      ),
-                      const SizedBox(width: 8),
                       // Execute Attack Button
                       ElevatedButton(
-                        onPressed: diceRolled && !attackExecuted
-                            ? _executeAttack
-                            : null,
+                        onPressed: attackExecuted ? null : _executeAttack,
                         child: const Text('Execute Attack'),
                       ),
                       const SizedBox(width: 8),
@@ -339,9 +403,9 @@ class _AttackDialogState extends State<AttackDialog> {
   // Helper function to get the attacker's stat based on the selected attack type
   int _getAttackerStat() {
     if (selectedAttackType == ATTACK_TYPE_MELEE) {
-      return widget.attacker.P;
+      return widget.attacker.P + widget.attacker.tempP;
     } else if (selectedAttackType == ATTACK_TYPE_RANGED) {
-      return widget.attacker.W;
+      return widget.attacker.W + widget.attacker.tempW;
     }
     return 0;
   }
@@ -349,9 +413,11 @@ class _AttackDialogState extends State<AttackDialog> {
   // Helper function to get the defender's stat based on the selected defense type
   int _getDefenderStat() {
     if (selectedDefenseType == DEFENCE_TYPE_BLOCK) {
-      return widget.defender.P;
+      return widget.defender.P + widget.defender.tempP;
+    } else if (selectedDefenseType == DEFENCE_TYPE_COVERED) {
+      return widget.defender.P + widget.defender.tempP + 2;
     } else {
-      return widget.defender.A;
+      return widget.defender.A + widget.defender.tempA;
     }
   }
 

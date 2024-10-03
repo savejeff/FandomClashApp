@@ -15,6 +15,15 @@ class CharacterStatsWidget extends StatelessWidget {
     required this.onTap,
   }) : super(key: key);
 
+
+  String printModifier(int mod_v) {
+    if(mod_v < 0)
+      return "$mod_v";
+    if(mod_v > 0)
+      return "+$mod_v";
+    return "  ";
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -66,7 +75,7 @@ class CharacterStatsWidget extends StatelessWidget {
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         TextSpan(
-                          text: '${character.P}   ',
+                          text: '${character.P}${printModifier(character.tempP)}  ',
                           style: TextStyle(fontWeight: FontWeight.normal),
                         ),
                         TextSpan(
@@ -74,7 +83,7 @@ class CharacterStatsWidget extends StatelessWidget {
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         TextSpan(
-                          text: '${character.A}   ',
+                          text: '${character.A}${printModifier(character.tempA)}  ',
                           style: TextStyle(fontWeight: FontWeight.normal),
                         ),
                         TextSpan(
@@ -82,7 +91,7 @@ class CharacterStatsWidget extends StatelessWidget {
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         TextSpan(
-                          text: '${character.W}',
+                          text: '${character.W}${printModifier(character.tempW)}  ',
                           style: TextStyle(fontWeight: FontWeight.normal),
                         ),
                       ],

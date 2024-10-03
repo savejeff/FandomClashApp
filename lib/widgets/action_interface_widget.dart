@@ -8,6 +8,8 @@ import '../global.dart';
 
 import '../target_picker.dart';
 
+import 'attack_dialog.dart';
+
 // ActionInterface Widget
 class ActionInterface extends StatelessWidget {
   String get TAG => runtimeType.toString();
@@ -23,6 +25,7 @@ class ActionInterface extends StatelessWidget {
 
   //*********************************************************************************
 
+
   void _onClick_Attack(BuildContext context, String type) async {
     if(!character.isAlive) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -33,19 +36,28 @@ class ActionInterface extends StatelessWidget {
 
     // Show the target picker dialog
     Character? target = await showTargetPickerDialog(
-      context,
-      character, // The attacker
-      Global().GameMan.characters, // Targets
-      Global().GameMan.currentPlayer()
+        context,
+        character, // The attacker
+        Global().GameMan.characters, // Targets
+        Global().GameMan.currentPlayer()
     );
 
     if (target != null) {
-      // Proceed with the attack logic
-      AttackResult result = attack(character, target, attackType: type);
-      LogTurn(TAG, result.message);
-      onUpdate(); // Update the UI
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(result.message)),
+      // Show the AttackDialog
+      await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AttackDialog(
+            attacker: character,
+            defender: target,
+            attackTypeInit: type,
+            onAttackComplete: () {
+              // Update the UI after the attack
+              onUpdate();
+              //setState(() {});
+            },
+          );
+        },
       );
     } else {
       // Attack was canceled
@@ -53,6 +65,7 @@ class ActionInterface extends StatelessWidget {
         SnackBar(content: Text('Attack canceled')),
       );
     }
+
   }
 
   void _onClick_ApplyModifier(BuildContext context) async {
@@ -93,7 +106,7 @@ class ActionInterface extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            'Actions for ${character.name}',
+            'Actions',
             style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
           Padding(
@@ -123,6 +136,7 @@ class ActionInterface extends StatelessWidget {
                     child: const Text('Attack Ranged'),
                   ),
                 ),
+                /*
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   // Add horizontal padding between buttons
@@ -133,6 +147,7 @@ class ActionInterface extends StatelessWidget {
                     child: const Text('Apply Modifier'),
                   ),
                 ),
+                 */
               ],
             ),
           ),

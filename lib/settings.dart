@@ -1,3 +1,3 @@
 
 
-const int ATTACK_ADVANTAGE_MODIFIER = 2;
+const int ATTACK_ADVANTAGE_MODIFIER = 0;

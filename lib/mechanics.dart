@@ -1,5 +1,5 @@
 // mechanics.dart
-import 'dart:ffi';
+
 
 import 'models.dart';
 import 'util.dart';
@@ -8,7 +8,6 @@ import 'util_game.dart';
 
 
 import 'defines.dart';
-import "global.dart";
 import "settings.dart";
 
 
@@ -41,6 +40,7 @@ AttackResult attack(
       String? defenseRollOverride,
       int? attackerDiceOverride,
       int? defenderDiceOverride,
+      bool dry_run = false,
     }) {
   AttackResult result = AttackResult(
     attacker_roll: 0,
@@ -112,27 +112,29 @@ AttackResult attack(
 
 
   // Determine if the attack hits
-  if (attack_total > defense_total) {
+  if (attack_total + ATTACK_ADVANTAGE_MODIFIER > defense_total) {
 
     // damage = attack stat + overflow from attack vs defense
     int damage = attackStat + (attack_total - defense_total);
+    int remainingHP = defender.HP;
 
-    // apply damage
-    defender.HP -= damage;
-    if (defender.HP < 0) {
-      defender.HP = 0;
+    // calculate remaining HP
+    remainingHP -= damage;
+    if (remainingHP < 0) {
+      remainingHP = 0;
     }
+    if(!dry_run)
+      defender.HP = remainingHP;
 
     result.hit = true;
     result.damage = damage;
-    result.remainingHP = defender.HP;
-    result.message =
-    "${attacker.name} hits ${defender.name} for $damage damage. ${defender.name} has ${defender.HP} HP left.";
+    result.remainingHP = remainingHP;
+    result.message = "(${attack_total}+${ATTACK_ADVANTAGE_MODIFIER}) > ${defense_total} \n ${attacker.name} hits ${defender.name} for $damage damage. ${defender.name} has ${remainingHP} HP left.";
   } else {
     result.hit = false;
     result.damage = 0;
     result.remainingHP = defender.HP;
-    result.message = "${attacker.name}'s attack misses ${defender.name}.";
+    result.message = "(${attack_total}+${ATTACK_ADVANTAGE_MODIFIER}) <= ${defense_total} \n ${attacker.name}'s attack misses ${defender.name}.";
   }
 
   return result;
