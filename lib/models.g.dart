@@ -19,6 +19,7 @@ Map<String, dynamic> _$EffectToJson(Effect instance) => <String, dynamic>{
 Ability _$AbilityFromJson(Map<String, dynamic> json) => Ability(
       name: json['name'] as String,
       cost: (json['cost'] as num).toInt(),
+      uses: (json['uses'] as num).toInt(),
       description: json['description'] as String,
       effect: json['effect'] == null
           ? null
@@ -28,6 +29,7 @@ Ability _$AbilityFromJson(Map<String, dynamic> json) => Ability(
 Map<String, dynamic> _$AbilityToJson(Ability instance) => <String, dynamic>{
       'name': instance.name,
       'cost': instance.cost,
+      'uses': instance.uses,
       'description': instance.description,
       'effect': instance.effect,
     };

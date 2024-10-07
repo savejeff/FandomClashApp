@@ -37,12 +37,14 @@ class Effect {
 class Ability {
   String name;
   int cost; // AP cost
+  int uses; // how many times ability can be used. USES_UNLIMITED (-1) for unlimited. USES_ALWAYS (-2) for always active
   String description;
   Effect? effect; // Function to apply the ability effect
 
   Ability({
     required this.name,
     required this.cost,
+    required this.uses,
     required this.description,
     this.effect,
   });

@@ -79,7 +79,7 @@ class _AttackDialogState extends State<AttackDialog> {
         defenderReaction: selectedDefenseType,
         attackRollOverride: selectedAttackRollType != "" ? selectedAttackRollType : null,
         defenseRollOverride: selectedDefenseRollType != "" ? selectedDefenseRollType : null,
-        dry_run: true
+        dry_run: false
       );
 
       setState(() {

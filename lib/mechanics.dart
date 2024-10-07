@@ -161,7 +161,7 @@ String attack_old(
   }
 
   // Attacker's roll
-  int attack_roll = average_roll_2d6() + attack_stat;
+  int attack_roll = roll_2d6_avg() + attack_stat;
 
   // Defender's roll and reaction
   int defense_stat = defender.A + defender.tempA;
@@ -169,12 +169,12 @@ String attack_old(
 
   if (defender_reaction == DEFENCE_TYPE_DODGE && defender.AP >= 1) {
     defender.AP -= 1;
-    defense_roll = roll_with_advantage() + defense_stat;
+    defense_roll = roll_2d6_max() + defense_stat;
   } else if (defender_reaction == DEFENCE_TYPE_BLOCK && defender.AP >= 1) {
     defender.AP -= 1;
-    defense_roll = average_roll_2d6() + defender.P + defender.tempP;
+    defense_roll = roll_2d6_avg() + defender.P + defender.tempP;
   } else {
-    defense_roll = average_roll_2d6() + defense_stat;
+    defense_roll = roll_2d6_avg() + defense_stat;
   }
 
   // Determine if the attack hits

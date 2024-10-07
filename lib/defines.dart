@@ -27,6 +27,10 @@ const ROLL_TYPE_AVG_2D6 = "avg_2d6";
 const ROLL_TYPE_MAX_2D6 = "max_2d6";
 const ROLL_TYPE_MIN_2D6 = "min_2d6";
 
+
+const USES_UNLIMITED = -1;
+const USES_ALWAYS = -2;
+
 //************** Development ******************
 
 
