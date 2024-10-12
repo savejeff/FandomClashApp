@@ -263,7 +263,9 @@ class DevelopManager {
               size: FIGURE_SIZE_MEDIUM,
               fandom: TRAIT_SUPERHERO,
               role: ROLE_SUPPORT,
-              abilities: [], // No additional custom abilities
+              abilities: [
+                ability_small_heal
+              ], // No additional custom abilities
             ),
           );
 

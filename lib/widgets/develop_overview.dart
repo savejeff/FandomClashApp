@@ -5,7 +5,7 @@ import 'dart:convert';
 import '../global.dart';
 
 import '../models.dart';
-import '../target_picker.dart';
+import '../dialogs/target_picker.dart';
 import '../mechanics.dart';
 import '../modules/game_state.dart';
 

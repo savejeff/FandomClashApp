@@ -1,17 +1,17 @@
-import 'package:fandom_clash/util_game.dart';
+import 'package:fandom_clash/util/util_game.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'dev_base.dart';
 
-import 'package:fandom_clash/util.dart';
+import 'package:fandom_clash/util/util.dart';
 import 'package:fandom_clash/models.dart';
 import 'package:fandom_clash/global.dart';
 import 'package:fandom_clash/defines.dart';
 
 import 'package:fandom_clash/widgets/value_modifier_widget.dart';
 
-import 'package:fandom_clash/widgets/attack_dialog.dart';
+import 'package:fandom_clash/dialogs/attack_dialog.dart';
 import 'package:fandom_clash/widgets/dice_roll_widget.dart';
 
 import 'dart:math';

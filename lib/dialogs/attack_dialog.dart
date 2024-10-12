@@ -3,7 +3,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:fandom_clash/defines.dart';
-import 'package:fandom_clash/util_game.dart';
+import 'package:fandom_clash/util/util_game.dart';
 import 'package:flutter/material.dart';
 
 import 'package:fandom_clash/models.dart';
@@ -11,7 +11,7 @@ import 'package:fandom_clash/mechanics.dart';
 
 import 'package:fandom_clash/settings.dart';
 
-import 'dice_roll_widget.dart'; // Import the DiceRollWidget
+import '../widgets/dice_roll_widget.dart'; // Import the DiceRollWidget
 
 
 class AttackDialog extends StatefulWidget {

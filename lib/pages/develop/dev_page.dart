@@ -3,7 +3,7 @@ import 'dart:async';
 
 import 'dev_base.dart';
 
-import 'package:fandom_clash/util.dart';
+import 'package:fandom_clash/util/util.dart';
 import 'package:fandom_clash/models.dart';
 import 'package:fandom_clash/global.dart';
 import 'package:fandom_clash/defines.dart';

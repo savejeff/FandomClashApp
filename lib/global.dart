@@ -1,7 +1,7 @@
 // global.dart
 import 'package:fandom_clash/modules/game_manager.dart';
 
-import 'util.dart';
+import 'util/util.dart';
 
 import 'modules/character_manager.dart';
 import 'modules/develop_manager.dart';

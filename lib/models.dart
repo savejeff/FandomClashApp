@@ -4,7 +4,7 @@ import 'package:json_annotation/json_annotation.dart';
 import 'dart:math';
 
 import 'defines.dart';
-import 'util.dart';
+import 'util/util.dart';
 
 part 'models.g.dart';
 

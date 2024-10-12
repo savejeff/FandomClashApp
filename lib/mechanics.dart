@@ -1,16 +1,11 @@
 // mechanics.dart
 
-
 import 'models.dart';
-import 'util.dart';
-import 'util_game.dart';
-
-
+import 'util/util.dart';
+import 'util/util_game.dart';
 
 import 'defines.dart';
 import "settings.dart";
-
-
 
 // attack_result.dart
 class AttackResult {
@@ -32,16 +27,16 @@ class AttackResult {
 }
 
 AttackResult attack(
-    Character attacker,
-    Character defender, {
-      String attackType = ATTACK_TYPE_MELEE,
-      String defenderReaction = DEFENCE_TYPE_NONE,
-      String? attackRollOverride,
-      String? defenseRollOverride,
-      int? attackerDiceOverride,
-      int? defenderDiceOverride,
-      bool dry_run = false,
-    }) {
+  Character attacker,
+  Character defender, {
+  String attackType = ATTACK_TYPE_MELEE,
+  String defenderReaction = DEFENCE_TYPE_NONE,
+  String? attackRollOverride,
+  String? defenseRollOverride,
+  int? attackerDiceOverride,
+  int? defenderDiceOverride,
+  bool dry_run = false,
+}) {
   AttackResult result = AttackResult(
     attacker_roll: 0,
     defender_roll: 0,
@@ -110,10 +105,8 @@ AttackResult attack(
   int attack_total = result.attacker_roll + attackStat;
   int defense_total = result.defender_roll + defenseStat;
 
-
   // Determine if the attack hits
   if (attack_total + ATTACK_ADVANTAGE_MODIFIER > defense_total) {
-
     // damage = attack stat + overflow from attack vs defense
     int damage = attackStat + (attack_total - defense_total);
     int remainingHP = defender.HP;
@@ -123,23 +116,23 @@ AttackResult attack(
     if (remainingHP < 0) {
       remainingHP = 0;
     }
-    if(!dry_run)
-      defender.HP = remainingHP;
+    if (!dry_run) defender.HP = remainingHP;
 
     result.hit = true;
     result.damage = damage;
     result.remainingHP = remainingHP;
-    result.message = "(${attack_total}+${ATTACK_ADVANTAGE_MODIFIER}) > ${defense_total} \n ${attacker.name} hits ${defender.name} for $damage damage. ${defender.name} has ${remainingHP} HP left.";
+    result.message =
+        "(${attack_total}+${ATTACK_ADVANTAGE_MODIFIER}) > ${defense_total} \n ${attacker.name} hits ${defender.name} for $damage damage. ${defender.name} has ${remainingHP} HP left.";
   } else {
     result.hit = false;
     result.damage = 0;
     result.remainingHP = defender.HP;
-    result.message = "(${attack_total}+${ATTACK_ADVANTAGE_MODIFIER}) <= ${defense_total} \n ${attacker.name}'s attack misses ${defender.name}.";
+    result.message =
+        "(${attack_total}+${ATTACK_ADVANTAGE_MODIFIER}) <= ${defense_total} \n ${attacker.name}'s attack misses ${defender.name}.";
   }
 
   return result;
 }
-
 
 /// Function to handle attacks
 String attack_old(
@@ -148,7 +141,6 @@ String attack_old(
   String attack_type = ATTACK_TYPE_MELEE,
   String defender_reaction = DEFENCE_TYPE_NONE,
 }) {
-
   // Determine attack and defense stats
   int attack_stat;
 
@@ -179,7 +171,6 @@ String attack_old(
 
   // Determine if the attack hits
   if (attack_roll + ATTACK_ADVANTAGE_MODIFIER > defense_roll) {
-
     // damage = attack stat + overflow from attack vs defense
     int damage = attack_stat + (attack_roll - defense_roll);
     defender.HP -= damage;
@@ -193,6 +184,8 @@ String attack_old(
   }
 }
 
+// ********************************* effect **********************************************************
+
 /// Applies a Effect and returns description modification / effect applied as string
 String applyEffect(Effect effect, Character user, Character? target) {
   String effect_str = "";
@@ -204,24 +197,43 @@ String applyEffect(Effect effect, Character user, Character? target) {
   return effect_str;
 }
 
+// ********************************* ability **********************************************************
+
 /// Function to use an ability
 String useAbility(
   Character user,
   Ability ability, {
   Character? target,
 }) {
-  if (user.AP >= ability.cost) {
-    user.AP -= ability.cost;
-    // Apply the ability's effect
-    if (ability.effect != null) {
-      return applyEffect(ability.effect!, user, target);
-    } else {
-      return "${user.name} uses ${ability.name}.";
-    }
+
+  // check if enough AP
+  if (user.AP < ability.cost) {
+    return "${user.name} does not have enough AP to use ${ability.name}";
+  }
+
+  // check if uses left
+  if (ability.uses == 0) {
+    return "No Uses of ${ability.name} left";
+  }
+
+  // Ability can be used
+
+  user.AP -= ability.cost;
+  if(ability.uses > 0)
+    ability.uses -= 1;
+
+
+  // Apply the ability's effect
+  if (ability.effect != null) {
+    return applyEffect(ability.effect!, user, target);
   } else {
-    return "${user.name} does not have enough AP to use ${ability.name}.";
+    return "${user.name} uses ${ability.name}";
   }
 }
+
+
+// ********************************* item **********************************************************
+
 
 /// Function to pick up an item
 String pickUpItem(Character character, Item item) {
@@ -249,10 +261,6 @@ String useItem(Character character, Item item) {
     return "${character.name} does not have ${item.name}.";
   }
 }
-
-
-
-
 
 //*********************** deprecated *******************
 

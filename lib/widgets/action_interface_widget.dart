@@ -5,10 +5,9 @@ import '../mechanics.dart';
 
 import '../global.dart';
 
+import '../dialogs/target_picker.dart';
 
-import '../target_picker.dart';
-
-import 'attack_dialog.dart';
+import '../dialogs/attack_dialog.dart';
 
 // ActionInterface Widget
 class ActionInterface extends StatelessWidget {
@@ -25,9 +24,8 @@ class ActionInterface extends StatelessWidget {
 
   //*********************************************************************************
 
-
   void _onClick_Attack(BuildContext context, String type) async {
-    if(!character.isAlive) {
+    if (!character.isAlive) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Dead Characters can't Attack")),
       );
@@ -39,8 +37,7 @@ class ActionInterface extends StatelessWidget {
         context,
         character, // The attacker
         Global().GameMan.characters, // Targets
-        Global().GameMan.currentPlayer()
-    );
+        Global().GameMan.currentPlayer());
 
     if (target != null) {
       // Show the AttackDialog
@@ -65,7 +62,6 @@ class ActionInterface extends StatelessWidget {
         SnackBar(content: Text('Attack canceled')),
       );
     }
-
   }
 
   void _onClick_ApplyModifier(BuildContext context) async {
@@ -75,14 +71,14 @@ class ActionInterface extends StatelessWidget {
     );
   }
 
-  void _onClick_UseAbility(BuildContext context, Ability ability, Character user, Character? target) async {
-    if(!character.isAlive) {
+  void _onClick_UseAbility(BuildContext context, Ability ability,
+      Character user, Character? target) async {
+    if (!character.isAlive) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Dead Characters can't use Abilities")),
       );
       return;
     }
-
 
     String result_str = useAbility(user, ability);
     onUpdate(); // Update the UI
@@ -90,9 +86,7 @@ class ActionInterface extends StatelessWidget {
     // Mockup: Activate ability
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-          content: Text(
-              '${character.name} uses ${ability.name}! $result_str')
-      ),
+          content: Text('${character.name} uses ${ability.name}! $result_str')),
     );
   }
 
@@ -136,18 +130,6 @@ class ActionInterface extends StatelessWidget {
                     child: const Text('Attack Ranged'),
                   ),
                 ),
-                /*
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  // Add horizontal padding between buttons
-                  child: ElevatedButton(
-                    onPressed: () {
-                      _onClick_ApplyModifier(context);
-                    },
-                    child: const Text('Apply Modifier'),
-                  ),
-                ),
-                 */
               ],
             ),
           ),
@@ -163,7 +145,17 @@ class ActionInterface extends StatelessWidget {
                 ...character.abilities.map((ability) => ListTile(
                       title: Text(ability.name),
                       subtitle: Text(ability.description),
-                      trailing: Text('Cost: ${ability.cost} AP'),
+                      trailing: Column(
+                        children: [
+                          Text('Cost: ${ability.cost} AP'),
+                          if(ability.uses >= 0)
+                            Text('Uses: ${ability.uses}'),
+                          if (ability.uses == USES_ALWAYS)
+                            Text('Always Active'),
+                          if (ability.uses == USES_UNLIMITED)
+                            Text('Unlimited Uses'),
+                        ],
+                      ),
                       onTap: () {
                         _onClick_UseAbility(context, ability, character, null);
                       },

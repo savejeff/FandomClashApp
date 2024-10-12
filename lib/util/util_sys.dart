@@ -1,5 +1,5 @@
 import 'package:fandom_clash/global.dart';
-import 'package:fandom_clash/util.dart';
+import 'package:fandom_clash/util/util.dart';
 
 
 void Log(String tag, String sformat, [List<Object>? args]) {

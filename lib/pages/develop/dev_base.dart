@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 
-import '../../util.dart';
+import '../../util/util.dart';
 
 
 // Base state class that holds the shared logic (LogX, LogClear, etc.)

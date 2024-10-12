@@ -1,7 +1,7 @@
 // target_picker.dart
 import 'package:flutter/material.dart';
-import 'models.dart';
-import 'global.dart'; // Import GameManager
+import '../models.dart';
+import '../global.dart'; // Import GameManager
 
 // Function to show the target picker dialog
 Future<Character?> showTargetPickerDialog(BuildContext context,
